@@ -78,7 +78,7 @@ namespace Projekt_Zespolowy.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            //[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
@@ -91,6 +91,11 @@ namespace Projekt_Zespolowy.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+            [Required(ErrorMessage = "Pole Imię jest wymagane.")]
+            public string FirstName { get; set; } = string.Empty;
+
+            [Required(ErrorMessage = "Pole Nazwisko jest wymagane.")]
+            public string LastName { get; set; } = string.Empty;
         }
 
 
@@ -108,7 +113,8 @@ namespace Projekt_Zespolowy.Areas.Identity.Pages.Account
             {
                 User user = new()
                 {
-
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
                 };
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
