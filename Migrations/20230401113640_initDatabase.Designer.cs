@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Projekt_Zespolowy.Data;
 
@@ -10,27 +11,14 @@ using Projekt_Zespolowy.Data;
 namespace Projekt_Zespolowy.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230401113640_initDatabase")]
+    partial class initDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.3");
-
-            modelBuilder.Entity("LevelClassOffer", b =>
-                {
-                    b.Property<int>("LevelClassesLevelId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("OffersOfferId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("LevelClassesLevelId", "OffersOfferId");
-
-                    b.HasIndex("OffersOfferId");
-
-                    b.ToTable("LevelClassOffer");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -261,7 +249,12 @@ namespace Projekt_Zespolowy.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("OfferId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("LevelId");
+
+                    b.HasIndex("OfferId");
 
                     b.ToTable("LevelClasses");
                 });
@@ -382,21 +375,6 @@ namespace Projekt_Zespolowy.Migrations
                     b.HasDiscriminator().HasValue("User");
                 });
 
-            modelBuilder.Entity("LevelClassOffer", b =>
-                {
-                    b.HasOne("Projekt_Zespolowy.Models.LevelClass", null)
-                        .WithMany()
-                        .HasForeignKey("LevelClassesLevelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Projekt_Zespolowy.Models.Offer", null)
-                        .WithMany()
-                        .HasForeignKey("OffersOfferId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -448,6 +426,13 @@ namespace Projekt_Zespolowy.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Projekt_Zespolowy.Models.LevelClass", b =>
+                {
+                    b.HasOne("Projekt_Zespolowy.Models.Offer", null)
+                        .WithMany("LevelClasses")
+                        .HasForeignKey("OfferId");
+                });
+
             modelBuilder.Entity("Projekt_Zespolowy.Models.Offer", b =>
                 {
                     b.HasOne("Projekt_Zespolowy.Models.Category", "Category")
@@ -484,6 +469,11 @@ namespace Projekt_Zespolowy.Migrations
                         .IsRequired();
 
                     b.Navigation("UserImage");
+                });
+
+            modelBuilder.Entity("Projekt_Zespolowy.Models.Offer", b =>
+                {
+                    b.Navigation("LevelClasses");
                 });
 
             modelBuilder.Entity("Projekt_Zespolowy.Models.User", b =>

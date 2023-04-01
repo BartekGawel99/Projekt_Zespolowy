@@ -7,5 +7,6 @@ namespace Projekt_Zespolowy.Models
         [Key]
         public int LevelId { get; set; }
         public string Name { get; set; } = string.Empty;
+        public List<Offer> Offers { get; set; }
     }
 }
