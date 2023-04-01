@@ -11,6 +11,9 @@ namespace Projekt_Zespolowy.Data
         {
         }
 
-        public DbSet<Test> Tests { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Offer> Offers { get; set; }
+        public DbSet<UserImage> UserImages { get; set; }
     }
 }
