@@ -15,5 +15,7 @@ namespace Projekt_Zespolowy.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Offer> Offers { get; set; }
         public DbSet<UserImage> UserImages { get; set; }
+        public DbSet<Localization> Localizations { get; set; }
+        public DbSet<LevelClass> LevelClasses { get; set; }
     }
 }

@@ -2,10 +2,10 @@
 
 namespace Projekt_Zespolowy.Models
 {
-    public class Category
+    public class LevelClass
     {
         [Key]
-        public int CategoryId { get; set; }
+        public int LevelId { get; set; }
         public string Name { get; set; } = string.Empty;
     }
 }
