@@ -11,7 +11,7 @@ using Projekt_Zespolowy.Data;
 namespace Projekt_Zespolowy.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230312183253_init")]
+    [Migration("20230402102436_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -19,6 +19,21 @@ namespace Projekt_Zespolowy.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.3");
+
+            modelBuilder.Entity("LevelClassOffer", b =>
+                {
+                    b.Property<int>("LevelClassesLevelId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("OffersOfferId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("LevelClassesLevelId", "OffersOfferId");
+
+                    b.HasIndex("OffersOfferId");
+
+                    b.ToTable("LevelClassOffer");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -43,7 +58,7 @@ namespace Projekt_Zespolowy.Migrations
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
-                    b.ToTable("AspNetRoles", (string)null);
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -66,7 +81,7 @@ namespace Projekt_Zespolowy.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims", (string)null);
+                    b.ToTable("RoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
@@ -79,6 +94,10 @@ namespace Projekt_Zespolowy.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -130,7 +149,11 @@ namespace Projekt_Zespolowy.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("Users", (string)null);
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -153,7 +176,7 @@ namespace Projekt_Zespolowy.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims", (string)null);
+                    b.ToTable("UserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -177,7 +200,7 @@ namespace Projekt_Zespolowy.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins", (string)null);
+                    b.ToTable("UserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -192,7 +215,7 @@ namespace Projekt_Zespolowy.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles", (string)null);
+                    b.ToTable("UserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -213,18 +236,168 @@ namespace Projekt_Zespolowy.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens", (string)null);
+                    b.ToTable("UserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Projekt_Zespolowy.Models.Test", b =>
+            modelBuilder.Entity("Projekt_Zespolowy.Models.Category", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Id");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.ToTable("Tests");
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("Projekt_Zespolowy.Models.LevelClass", b =>
+                {
+                    b.Property<int>("LevelId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("LevelId");
+
+                    b.ToTable("LevelClasses");
+                });
+
+            modelBuilder.Entity("Projekt_Zespolowy.Models.Localization", b =>
+                {
+                    b.Property<int>("LocalizationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("HomeNumber")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("HouseNumber")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("LocalizationId");
+
+                    b.ToTable("Localizations");
+                });
+
+            modelBuilder.Entity("Projekt_Zespolowy.Models.Offer", b =>
+                {
+                    b.Property<int>("OfferId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsOnline")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("LocalizationId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("OfferCreatorId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OfferDescription")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OfferName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("OfferId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("LocalizationId");
+
+                    b.HasIndex("OfferCreatorId");
+
+                    b.ToTable("Offers");
+                });
+
+            modelBuilder.Entity("Projekt_Zespolowy.Models.UserImage", b =>
+                {
+                    b.Property<int>("UserImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserImageURl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("UserImageId");
+
+                    b.ToTable("UserImages");
+                });
+
+            modelBuilder.Entity("Projekt_Zespolowy.Models.User", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Rating")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("UserImageId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasIndex("UserImageId");
+
+                    b.HasDiscriminator().HasValue("User");
+                });
+
+            modelBuilder.Entity("LevelClassOffer", b =>
+                {
+                    b.HasOne("Projekt_Zespolowy.Models.LevelClass", null)
+                        .WithMany()
+                        .HasForeignKey("LevelClassesLevelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Projekt_Zespolowy.Models.Offer", null)
+                        .WithMany()
+                        .HasForeignKey("OffersOfferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -276,6 +449,49 @@ namespace Projekt_Zespolowy.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Projekt_Zespolowy.Models.Offer", b =>
+                {
+                    b.HasOne("Projekt_Zespolowy.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Projekt_Zespolowy.Models.Localization", "Localization")
+                        .WithMany()
+                        .HasForeignKey("LocalizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Projekt_Zespolowy.Models.User", "OfferCreator")
+                        .WithMany("Offers")
+                        .HasForeignKey("OfferCreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Localization");
+
+                    b.Navigation("OfferCreator");
+                });
+
+            modelBuilder.Entity("Projekt_Zespolowy.Models.User", b =>
+                {
+                    b.HasOne("Projekt_Zespolowy.Models.UserImage", "UserImage")
+                        .WithMany()
+                        .HasForeignKey("UserImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserImage");
+                });
+
+            modelBuilder.Entity("Projekt_Zespolowy.Models.User", b =>
+                {
+                    b.Navigation("Offers");
                 });
 #pragma warning restore 612, 618
         }
