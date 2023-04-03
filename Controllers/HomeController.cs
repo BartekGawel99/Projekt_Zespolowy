@@ -15,10 +15,6 @@ namespace Projekt_Zespolowy.Controllers
 
         public IActionResult Index()
         {
-
-
-
-
             return View();
         }
 

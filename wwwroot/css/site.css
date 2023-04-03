@@ -1,18 +1,38 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
+
+.footer-banner {
+    background-color: burlywood;
+    color: white !important;
+}
+
+.menu-color {
+    background-color: burlywood;
+    color: white !important;
+}
+
+.menu-button {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+}
+
+    .menu-button:hover {
+        color: lightgray;
+    }
