@@ -52,5 +52,6 @@ namespace Projekt_Zespolowy.Data
         public DbSet<UserImage> UserImages { get; set; }
         public DbSet<Localization> Localizations { get; set; }
         public DbSet<LevelClass> LevelClasses { get; set; }
+        public DbSet<Opinion> Opinions { get; set; }
     }
 }
