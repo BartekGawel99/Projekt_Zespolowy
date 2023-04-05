@@ -8,13 +8,13 @@ using Projekt_Zespolowy.ViewModels;
 namespace Projekt_Zespolowy.Controllers
 {
     [Authorize]
-    public class AddOfferController : Controller
+    public class OffersController : Controller
     {
         private readonly ApplicationDbContext _db;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<User> _userManager;
 
-        public AddOfferController(UserManager<User> userManager, ApplicationDbContext db, IHttpContextAccessor httpContextAccessor)
+        public OffersController(UserManager<User> userManager, ApplicationDbContext db, IHttpContextAccessor httpContextAccessor)
         {
             _db = db;
             _httpContextAccessor = httpContextAccessor;
