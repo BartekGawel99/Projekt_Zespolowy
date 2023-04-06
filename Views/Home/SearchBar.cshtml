@@ -1,0 +1,27 @@
+﻿@using Projekt_Zespolowy.ViewModels;
+@model SearchVM
+
+<h1>Wyszukiwarka</h1>
+
+<form asp-action="SearchBar" method="post">
+    <div class="form-group">
+        <label for="SearchString">Szukana fraza:</label>
+        <input type="text" class="form-control" id="SzukanaFraza" asp-for="SearchString" placeholder="Wpisz szukaną frazę">
+    </div>
+    <button type="submit" class="btn btn-primary">Wyszukaj</button>
+</form>
+
+@if (Model.SearchResult != null && Model.SearchResult.Any())
+{
+    <h2>Wyniki wyszukiwania:</h2>
+    <ul>
+        @foreach (var wynik in Model.SearchResult)
+        {
+            <li>@wynik</li>
+        }
+    </ul>
+}
+else if (!string.IsNullOrEmpty(Model.SearchString))
+{
+    <p>Brak wyników wyszukiwania dla frazy "@Model.SearchString".</p>
+}

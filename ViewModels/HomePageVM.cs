@@ -8,5 +8,9 @@ namespace Projekt_Zespolowy.ViewModels
         public List<Localization> localizationList = new();
         public List<Offer> offerList = new();
         public List<LevelClass> levelClassList = new();
+
+
+
+
     }
 }
