@@ -20,16 +20,13 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="menu-button" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="menu-button" asp-area="" asp-controller="Home" asp-action="Index">Strona główna</a>
                         </li>
                         <li class="nav-item">
-                            <a class="menu-button" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="menu-button" asp-area="" asp-controller="Home" asp-action="SearchBar">Wyszukiwarka</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="SearchBar">Wyszukiwarka</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Offers" asp-action="Add">Dodaj Oferte</a>
+                            <a class="menu-button" asp-area="" asp-controller="Offers" asp-action="Add">Dodaj Ofertę</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
@@ -45,7 +42,7 @@
 
     <footer class="border-top footer text-muted footer-banner">
         <div class="container">
-            &copy; 2023 - Projekt_Zespolowy - <a class="menu-button" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2023 - E-korki
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
