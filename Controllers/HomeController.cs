@@ -27,7 +27,6 @@ namespace Projekt_Zespolowy.Controllers
                 levelClassList = _db.LevelClasses.ToList(),
                 offerList = _db.Offers.ToList(),
             };
-
             return View();
         }
 
