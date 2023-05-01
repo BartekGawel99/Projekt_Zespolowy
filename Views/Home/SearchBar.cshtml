@@ -17,7 +17,7 @@
     <ul>
         @foreach (var wynik in Model.SearchResult)
         {
-            <li>@wynik</li>
+            @Html.ActionLink(wynik.OfferName, "OfferDetails", "Offers", new { OfferID = wynik.OfferId }, null)
         }
     </ul>
 }

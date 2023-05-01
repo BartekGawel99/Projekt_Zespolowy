@@ -50,38 +50,22 @@ namespace Projekt_Zespolowy.Controllers
 
             return View(model);
         }
-        private async Task<List<string>> SearchInDbAsync(string SearchString)
+        private async Task<List<Offer>> SearchInDbAsync(string SearchString)
         {
-            List<string> wyniki = new List<string>();
-
+ 
 
             var tableWithOffersResult = await _db.Offers
-                .Where(t => t.OfferName.ToLower().Contains(SearchString.ToLower()))
-                .Select(t => t.OfferName)
-                .ToListAsync();
-            wyniki.AddRange(tableWithOffersResult);
+                .Include(o => o.Localization)
+                .Include(o => o.LevelClasses)
+                .Include(o => o.Category)
+                .Where(t => t.OfferName.ToLower().Contains(SearchString.ToLower()) ||
+                t.Localization.City.ToLower().Contains(SearchString.ToLower()) ||
+                t.LevelClasses.Any(lc => lc.Name.ToLower().Contains(SearchString.ToLower())) ||
+                t.Category.Name.ToLower().Contains(SearchString.ToLower()))
+    .ToListAsync();
+           
 
-            var tableWithLocalizationsResult = await _db.Localizations
-                .Where(t => t.City.ToLower().Contains(SearchString.ToLower()))
-                .Select(t => t.City)
-                .ToListAsync();
-            wyniki.AddRange(tableWithLocalizationsResult);
-
-            var tableWithLevelClassesResult = await _db.LevelClasses
-                .Where(t => t.Name.ToLower().Contains(SearchString.ToLower()))
-                .Select(t => t.Name)
-                .ToListAsync();
-            wyniki.AddRange(tableWithLevelClassesResult);
-
-            var tableWithCategoriesResult = await _db.Categories
-                .Where(t => t.Name.ToLower().Contains(SearchString.ToLower()))
-                .Select(t => t.Name)
-                .ToListAsync();
-            wyniki.AddRange(tableWithCategoriesResult);
-
-
-            return wyniki;
+            return tableWithOffersResult;
         }
-
     }
 }

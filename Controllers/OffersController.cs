@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Projekt_Zespolowy.Data;
 using Projekt_Zespolowy.Models;
 using Projekt_Zespolowy.ViewModels;
@@ -49,6 +50,15 @@ namespace Projekt_Zespolowy.Controllers
             _db.Add(Offer);
             await _db.SaveChangesAsync();
             return Redirect("Add");
+        }
+
+
+        public async Task<IActionResult> OfferDetails(int OfferID)
+        {
+            var Offer = await _db.Offers.
+                Where(x => x.OfferId == OfferID)
+                .FirstOrDefaultAsync();
+            return View(Offer);
         }
     }
 }
