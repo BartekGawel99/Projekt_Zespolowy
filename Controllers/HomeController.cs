@@ -20,14 +20,13 @@ namespace Projekt_Zespolowy.Controllers
 
         public IActionResult Index()
         {
-            HomePageVM homePageVM = new HomePageVM
-            {
-                categorieList = _db.Categories.ToList(),
-                localizationList = _db.Localizations.ToList(),
-                levelClassList = _db.LevelClasses.ToList(),
-                offerList = _db.Offers.ToList(),
-            };
-            return View();
+
+            var oferty = _db.Offers
+                .Include(o => o.OfferCreator)
+                .Include(o => o.Localization)
+                .ToList();
+
+            return View(oferty);
         }
 
         public IActionResult Privacy()

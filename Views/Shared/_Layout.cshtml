@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -28,6 +29,12 @@
                         <li class="nav-item">
                             <a class="menu-button" asp-area="" asp-controller="Offers" asp-action="Add">Dodaj Ofertę</a>
                         </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="menu-button" asp-area="" asp-controller="Offers" asp-action="ShowOffers">Moje oferty</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

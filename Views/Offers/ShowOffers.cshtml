@@ -1,27 +1,33 @@
-﻿@using Projekt_Zespolowy.Controllers
-
-@model List<Offer>
+﻿@model List<Offer>
 
 @{
-    ViewData["Title"] = "Strona główna - ";
+    ViewData["Title"] = "ShowOffers";
 }
 
+<h1>Offers</h1>
 
+<div>
+    <h4>Offer</h4>
+    <br />
+
+    <form method="post">
     <table class="table table-striped border">
         <tr class="table-secondary">
             <th>Nazwa</th>
             <th>Lokalizacja</th>
-            <th>Imię iNazwisko</th>
             <th>Cena</th>
+            <th></th>
         </tr>
         @foreach (var item in Model)
         {
             <tr>
                 <td>@Html.ActionLink(item.OfferName, "OfferDetails", "Offers", new { OfferID = item.OfferId }, null)</td>
                 <td>@Html.DisplayFor(m => item.Localization.City)</td>
-                <td>@Html.DisplayFor(m => item.OfferCreator.FirstName) @Html.DisplayFor(m => item.OfferCreator.LastName)</td>
                 <td>@Html.DisplayFor(m => item.Price)</td>
+                <td>@Html.ActionLink("Usuń", "Delete", "Offers", new { OfferID = item.OfferId }, null)</td>
             </tr>
         }
     </table>
+    </form>
+</div>
 
