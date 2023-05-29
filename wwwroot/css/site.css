@@ -41,3 +41,27 @@ body {
 .form-group {
     margin-top: 10px;
 }
+
+.offer {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+    .offer h4 {
+        margin-top: 0;
+    }
+
+    .offer p {
+        margin: 0;
+    }
+
+.site-link {
+    color: black;
+    text-decoration: none;
+}
+
+.offer-localization {
+
+}

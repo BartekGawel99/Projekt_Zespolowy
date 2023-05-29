@@ -97,14 +97,17 @@ namespace Projekt_Zespolowy.Controllers
             return Redirect("ShowOffers");
         }
 
-        public async Task<IActionResult> OfferDetails(int OfferID)
+        public async Task<IActionResult> OfferDetails(int id)
         {
-            var Offer = await _db.Offers
+            var offerDetailsVM = new OfferDetailsVM();
+            var offer = await _db.Offers
                 .Include(o => o.OfferCreator)
                 .Include(o => o.Localization)
-                .Where(x => x.OfferId == OfferID)
+                .Where(x => x.OfferId == id)
                 .FirstOrDefaultAsync();
-            return View(Offer);
+
+            offerDetailsVM.Offer = offer;
+            return View(offerDetailsVM);
         }
     }
 }

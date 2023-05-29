@@ -13,7 +13,7 @@ namespace Projekt_Zespolowy.Models
         [Display(Name = "Opis oferty")]
         public string OfferDescription { get; set; } = string.Empty;
         [Required(ErrorMessage = "Proszę podać cenę oferty")]
-        [Display(Name = "Oferowana cena")]
+        [Display(Name = "Oferowana cena [zł/h]")]
         public double Price { get; set; } = 0;
         [Required]
         [Display(Name = "Czy zajęcia są zdalne?")]

@@ -3,11 +3,45 @@
 @model List<Offer>
 
 @{
-    ViewData["Title"] = "Strona główna - ";
+    ViewData["Title"] = "Strona główna ";
 }
+    @*<style>
+        .offer {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .offer h4 {
+            margin-top: 0;
+        }
+        .offer p {
+            margin: 0;
+        }
+    </style>*@
 
+    <div class="container">
+        <h1>Lista najnowszych ofert</h1>
+        @foreach (var item in Model)
+        {
+            <a class="site-link" asp-area="" asp-controller="Offers" asp-action="OfferDetails" asp-route-id="@item.OfferId">
+            <div class="offer">
+                <h4>Korepetytor: @item.OfferCreator.FirstName @item.OfferCreator.LastName</h4>
+                @if(!item.IsOnline)
+                {
+                    <p>Lokalizacja: @item.Localization.City</p>
+                }
+                else
+                {
+                    <p>Zajęcia zdalne</p>
+                }
+                <p>Cena [zł/h]: @item.Price</p>
+            </div>
+            </a>
+        }
+    </div>
 
-    <table class="table table-striped border">
+    @*<table class="table table-striped border">
         <tr class="table-secondary">
             <th>Nazwa</th>
             <th>Lokalizacja</th>
@@ -23,5 +57,6 @@
                 <td>@Html.DisplayFor(m => item.Price)</td>
             </tr>
         }
-    </table>
+    </table>*@
+
 

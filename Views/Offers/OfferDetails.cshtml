@@ -1,58 +1,133 @@
-﻿@model Projekt_Zespolowy.Models.Offer
+﻿@model Projekt_Zespolowy.ViewModels.OfferDetailsVM
 
 @{
-    ViewData["Title"] = "OfferDetails";
+	ViewData["Title"] = Model.Offer.OfferName;
 }
 
-<h1>OfferDetails</h1>
-
 <div>
-    <h4>Offer</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OfferName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OfferName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OfferDescription)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OfferDescription)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsOnline)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsOnline)
-        </dd>
+	<h4>@Html.DisplayFor(model => model.Offer.OfferName)</h4>
+	<hr />
+	<dl class="row">
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Offer.OfferCreator.FirstName)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Offer.OfferCreator.FirstName)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Offer.OfferCreator.LastName)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Offer.OfferCreator.LastName)
+		</dd>
+		@*Jeśli uzytkownik zalogowany to widzi numer telefonu oferenta*@
+		@if (User.Identity.IsAuthenticated && !string.IsNullOrEmpty(Model.Offer.OfferCreator.PhoneNumber))
+		{
+			<dt class = "col-sm-2">
+				@Html.DisplayNameFor(model => model.Offer.OfferCreator.PhoneNumber)
+			</dt>
+			<dd class = "col-sm-10">
+				@Html.DisplayFor(model => model.Offer.OfferCreator.PhoneNumber)
+			</dd>
+		}
+		<dt class = "col-sm-2">
+			@Html.DisplayNameFor(model => model.Offer.Price)
+		</dt>
+		<dd class = "col-sm-10">
+			@Html.DisplayFor(model => model.Offer.Price) [zł/h]
+		</dd>
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Localization.City)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Localization.City)
+		@if (Model.Offer.IsOnline)
+		{
+			<dt class = "col-sm-2">
+				@Html.DisplayNameFor(model => model.Offer.IsOnline)
+			</dt>
+			<dd class = "col-sm-10">
+				<span>Zajęcia odbywają się zdalnie</span>
+			</dd>
+		}
+		else
+		{
+			<div class="offer-localization">
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Offer.Localization.City)
+				</dt>
+				<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.Offer.Localization.City)
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Offer.Localization.PostalCode)
+				</dt>
+				<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.Offer.Localization.PostalCode)
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Offer.Localization.Street)
+				</dt>
+				<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.Offer.Localization.Street)
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Offer.Localization.HouseNumber)
+				</dt>
+				<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.Offer.Localization.HouseNumber)
+				</dd>
+				@if (!string.IsNullOrEmpty(Model.Offer.Localization.HomeNumber))
+				{
+					<dt class="col-sm-2">
+						@Html.DisplayNameFor(model => model.Offer.Localization.HomeNumber)
+					</dt>
+					<dd class="col-sm-10">
+						@Html.DisplayFor(model => model.Offer.Localization.HomeNumber)
+					</dd>
+				}
+			</div>
+		}
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.OfferCreator.FirstName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OfferCreator.FirstName)
+		<dt class = "col-sm-2">
+			@Html.DisplayNameFor(model => model.Offer.OfferDescription)
+		</dt>
+		<dd class = "col-sm-10">
+			@Html.DisplayFor(model => model.Offer.OfferDescription)
+		</dd>	
+	</dl>
+	
+	@*Poziomy nauczania*@
+	@if (Model.Offer.LevelClasses.Any())
+	{
+		<ul>
+			<span>Dostępne poziomy nauczania</span>
+			@foreach (var level in Model.Offer.LevelClasses)
+			{
+				<li>@level.Name</li>
+			}
+		</ul>
+	}
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.OfferCreator.LastName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OfferCreator.LastName)
-        </dd>
-    </dl>
+	@*Ocena korepetytora. Trzeba dodać sprawdzenie czy jest jakaś opinia. Jeśli nie to dać informacje że brak opinii*@
+	<dt class = "col-sm-2">
+		@Html.DisplayNameFor(model => model.Offer.OfferCreator.Rating)
+	</dt>
+	<dd class = "col-sm-10">
+		@Html.DisplayFor(model => model.Offer.OfferCreator.Rating)
+	</dd>
+
+	@*Dodawanie ocen korepetytora. Trzeba dodać sprawdzanie czy dany użytkowników już nie dodał oceny korepetytora*@
+	@if (User.Identity.IsAuthenticated)
+	{
+		<form method="post" asp-controller="Offers" asp-action="AddComment">
+			<div class="form-group">
+                <label asp-for="Opinion.Comment" class="control-label"></label>
+					<input asp-for="Opinion.Comment" class="form-control" />
+					<span asp-validation-for="Opinion.Comment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Opinion.Rate" class="control-label"></label>
+                <input asp-for="Opinion.Rate" class="form-control" />
+					<span asp-validation-for="Opinion.Rate" class=" text-danger"></span>
+            </div>
+		</form>
+	}
 </div>
 

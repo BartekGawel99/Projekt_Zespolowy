@@ -4,24 +4,38 @@
 <h1>Wyszukiwarka</h1>
 
 <form asp-action="SearchBar" method="post">
-    <div class="form-group">
-        <label for="SearchString">Szukana fraza:</label>
-        <input type="text" class="form-control" id="SzukanaFraza" asp-for="SearchString" placeholder="Wpisz szukaną frazę">
-    </div>
-    <button type="submit" class="btn btn-primary">Wyszukaj</button>
+	<div class="form-group">
+		<label for="SearchString">Szukana fraza:</label>
+		<input type="text" class="form-control" id="SzukanaFraza" asp-for="SearchString" placeholder="Wpisz szukaną frazę">
+	</div>
+	<button type="submit" class="btn btn-primary" style="margin-top:10px;">Wyszukaj</button>
 </form>
 
 @if (Model.SearchResult != null && Model.SearchResult.Any())
 {
-    <h2>Wyniki wyszukiwania:</h2>
-    <ul>
-        @foreach (var wynik in Model.SearchResult)
-        {
-            @Html.ActionLink(wynik.OfferName, "OfferDetails", "Offers", new { OfferID = wynik.OfferId }, null)
-        }
-    </ul>
+		<h2>Lista pasujących ofert:</h2>
+		<div class="container">
+		@foreach (var offer in Model.SearchResult)
+		{
+			@*@Html.ActionLink(wynik.OfferName, "OfferDetails", "Offers", new { OfferID = wynik.OfferId }, null)*@
+					<a class="site-link" asp-area="" asp-controller="Offers" asp-action="OfferDetails" asp-route-id="@offer.OfferId">
+				<div class="offer">
+					<h4>Korepetytor: @offer.OfferCreator.FirstName @offer.OfferCreator.LastName</h4>
+					@if (!offer.IsOnline)
+					{
+						<p>Lokalizacja: @offer.Localization.City</p>
+					}
+					else
+					{
+						<p>Zajęcia zdalne</p>
+					}
+					<p>Cena [zł/h]: @offer.Price</p>
+				</div>
+			</a>
+		}
+		</div>
 }
 else if (!string.IsNullOrEmpty(Model.SearchString))
 {
-    <p>Brak wyników wyszukiwania dla frazy "@Model.SearchString".</p>
+		<p>Brak wyników wyszukiwania dla frazy "@Model.SearchString".</p>
 }

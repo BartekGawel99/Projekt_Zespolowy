@@ -20,13 +20,15 @@ namespace Projekt_Zespolowy.Controllers
 
         public IActionResult Index()
         {
-
-            var oferty = _db.Offers
-                .Include(o => o.OfferCreator)
+            var tableWithOffersResult = _db.Offers
                 .Include(o => o.Localization)
+                .Include(o => o.OfferCreator)
+                .Include(o => o.Category)
+                .OrderByDescending(t => t.OfferId)
+                .Take(5)
                 .ToList();
 
-            return View(oferty);
+            return View(tableWithOffersResult);
         }
 
         public IActionResult Privacy()
@@ -49,10 +51,9 @@ namespace Projekt_Zespolowy.Controllers
 
             return View(model);
         }
+
         private async Task<List<Offer>> SearchInDbAsync(string SearchString)
         {
- 
-
             var tableWithOffersResult = await _db.Offers
                 .Include(o => o.Localization)
                 .Include(o => o.LevelClasses)
@@ -61,8 +62,8 @@ namespace Projekt_Zespolowy.Controllers
                 t.Localization.City.ToLower().Contains(SearchString.ToLower()) ||
                 t.LevelClasses.Any(lc => lc.Name.ToLower().Contains(SearchString.ToLower())) ||
                 t.Category.Name.ToLower().Contains(SearchString.ToLower()))
-    .ToListAsync();
-           
+                .OrderByDescending(t => t.OfferId)
+                .ToListAsync();
 
             return tableWithOffersResult;
         }
