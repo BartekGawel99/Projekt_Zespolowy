@@ -45,14 +45,16 @@ namespace Projekt_Zespolowy.Controllers
         {
             AddOfferVM addOfferVM = new()
             {
-                Category = _db.Categories.ToList(),
-                LevelClass = _db.LevelClasses.ToList(),
-
+                CategoriesList = _db.Categories.Where(x => !string.IsNullOrEmpty(x.Name)).ToList(),
+                LevelClassesList = _db.LevelClasses.ToList(),
             };
             return View(addOfferVM);
         }
         public async Task<IActionResult> AddOffer(AddOfferVM AddOfferVM)
         {
+            //TRZEBA ZROBIĆ ŻE JAK AddOfferVM.Offer.Category.CategoryId jest 0 to wróć do poprzedniego widoku z odpowiednią informacją i nie twórz oferty
+
+            var offerCategory = _db.Categories.Where(x => x.CategoryId == AddOfferVM.Offer.Category.CategoryId).FirstOrDefault();
 
             var Offer = new Offer()
             {
@@ -61,10 +63,16 @@ namespace Projekt_Zespolowy.Controllers
                 OfferCreator = _userManager.FindByNameAsync(_httpContextAccessor.HttpContext?.User.Identity?.Name).Result,
                 Price = AddOfferVM.Offer.Price,
                 IsOnline = AddOfferVM.Offer.IsOnline,
-                Category = AddOfferVM.Offer.Category,
                 LevelClasses = AddOfferVM.Offer.LevelClasses,
-                Localization = AddOfferVM.Localization,
+                //Localization = AddOfferVM.Localization,
             };
+            if(!string.IsNullOrEmpty(AddOfferVM.Localization.PostalCode) && !string.IsNullOrEmpty(AddOfferVM.Localization.City) && !string.IsNullOrEmpty(AddOfferVM.Localization.Street) && !string.IsNullOrEmpty(AddOfferVM.Localization.HouseNumber))
+            {
+                Offer.Localization = AddOfferVM.Localization;
+            }
+
+            if (offerCategory != null)
+                Offer.Category = offerCategory;
 
             _db.Add(Offer);
             await _db.SaveChangesAsync();

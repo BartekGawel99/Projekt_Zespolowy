@@ -6,7 +6,7 @@ namespace Projekt_Zespolowy.ViewModels
     {
         public Offer Offer { get; set; } = new Offer();
         public Localization Localization { get; set; } = new Localization();
-        public List<Category> Category { get; set; } = new List<Category>();
-        public List<LevelClass> LevelClass { get; set; } = new List<LevelClass>();
+        public List<Category> CategoriesList { get; set; } = new List<Category>();
+        public List<LevelClass> LevelClassesList { get; set; } = new List<LevelClass>();
     }
 }
