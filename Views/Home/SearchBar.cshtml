@@ -1,15 +1,15 @@
 ﻿@using Projekt_Zespolowy.ViewModels;
 @model SearchVM
 
-<h1>Wyszukiwarka</h1>
+<h1>Przęglądanie ofert</h1>
 
-<form asp-action="SearchBar" method="post">
+@*<form asp-action="SearchBar" method="post">
 	<div class="form-group">
 		<label for="SearchString">Szukana fraza:</label>
-		<input type="text" class="form-control" id="SzukanaFraza" asp-for="SearchString" placeholder="Wpisz szukaną frazę">
+		<input type="text" class="form-control" id="searchString" name="searchString" placeholder="Wpisz szukaną frazę">
 	</div>
 	<button type="submit" class="btn btn-primary" style="margin-top:10px;">Wyszukaj</button>
-</form>
+</form>*@
 
 @if (Model.SearchResult != null && Model.SearchResult.Any())
 {

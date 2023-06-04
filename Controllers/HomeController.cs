@@ -42,10 +42,23 @@ namespace Projekt_Zespolowy.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public async Task<IActionResult> SearchBar(SearchVM model)
+        //public async Task<IActionResult> SearchBar(SearchVM model)
+        //{
+        //    if (!string.IsNullOrEmpty(model.SearchString))
+        //    {
+        //        model.SearchResult = await SearchInDbAsync(model.SearchString);
+        //    }
+
+
+        //    return View(model);
+        //}
+
+        public async Task<IActionResult> SearchBar(string searchString)
         {
-            if (!string.IsNullOrEmpty(model.SearchString))
+            var model = new SearchVM();
+            if (!string.IsNullOrEmpty(searchString))
             {
+                model.SearchString = searchString;
                 model.SearchResult = await SearchInDbAsync(model.SearchString);
             }
 
@@ -58,6 +71,7 @@ namespace Projekt_Zespolowy.Controllers
                 .Include(o => o.Localization)
                 .Include(o => o.LevelClasses)
                 .Include(o => o.Category)
+                .Include(o => o.OfferCreator)
                 .Where(t => t.OfferName.ToLower().Contains(SearchString.ToLower()) ||
                 t.Localization.City.ToLower().Contains(SearchString.ToLower()) ||
                 t.LevelClasses.Any(lc => lc.Name.ToLower().Contains(SearchString.ToLower())) ||
