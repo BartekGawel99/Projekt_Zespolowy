@@ -73,18 +73,13 @@ namespace Projekt_Zespolowy.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(User user)
         {
-            var userName = await _userManager.GetUserNameAsync(user);
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            var userProf = _db.Users.Where(x => x.PhoneNumber.Equals(phoneNumber)).FirstOrDefault();
-            var firstName = userProf.FirstName;
-            var lastName = userProf.LastName;
-            Username = userName;
-
+            var userName = await _userManager.GetUserNameAsync(user);            
+            var userProf = _db.Users.Where(x => x.Email.Equals(userName)).FirstOrDefault();
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber,
-                FirstName = firstName,
-                LastName = lastName,
+                PhoneNumber = await _userManager.GetPhoneNumberAsync(user),
+                FirstName = userProf.FirstName,
+                LastName = userProf.LastName,
             };
         }
 

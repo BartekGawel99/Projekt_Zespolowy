@@ -99,6 +99,10 @@ namespace Projekt_Zespolowy.Areas.Identity.Pages.Account
             [Display(Name = "Nazwisko")]
             [Required(ErrorMessage = "Pole Nazwisko jest wymagane.")]
             public string LastName { get; set; } = string.Empty;
+
+            [Phone]
+            [Display(Name = "Numer Telefonu")]
+            public string PhoneNumber { get; set; } = string.Empty;
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -117,6 +121,7 @@ namespace Projekt_Zespolowy.Areas.Identity.Pages.Account
                 {
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
+                    PhoneNumber = Input.PhoneNumber,
                 };
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
