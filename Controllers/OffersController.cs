@@ -124,7 +124,11 @@ namespace Projekt_Zespolowy.Controllers
 
 		public async Task<IActionResult> EditOffers() 
         {
-			var offerDetailsVM = new EditOfferVM();
+            var offerDetailsVM = new EditOfferVM()
+            {
+                CategoriesList = _db.Categories.Where(x => !string.IsNullOrEmpty(x.Name)).ToList(),
+                LevelClassesList = _db.LevelClasses.ToList(),
+            };
 			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var offers = await _db.Offers

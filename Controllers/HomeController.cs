@@ -75,7 +75,11 @@ namespace Projekt_Zespolowy.Controllers
                 .Where(t => t.OfferName.ToLower().Contains(SearchString.ToLower()) ||
                 t.Localization.City.ToLower().Contains(SearchString.ToLower()) ||
                 t.LevelClasses.Any(lc => lc.Name.ToLower().Contains(SearchString.ToLower())) ||
-                t.Category.Name.ToLower().Contains(SearchString.ToLower()))
+                t.Category.Name.ToLower().Contains(SearchString.ToLower()) ||
+                    (t.OfferCreator.FirstName.ToLower().Contains(SearchString.ToLower()) ||
+                    t.OfferCreator.LastName.ToLower().Contains(SearchString.ToLower()) ||
+                    t.OfferCreator.Email.ToLower().Contains(SearchString.ToLower())) // etc. dla każdego pola w OfferCreator
+                )
                 .OrderByDescending(t => t.OfferId)
                 .ToListAsync();
 
