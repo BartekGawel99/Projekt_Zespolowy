@@ -13,13 +13,12 @@ namespace Projekt_Zespolowy.Models
         [Required(ErrorMessage = "Pole Nazwisko jest wymagane.")]
         [Display(Name = "Nazwisko")]
         public string LastName { get; set; } = string.Empty;
-        [Display(Name = "Średnia ocen korepetytora")]
-        public double Rating { get; set; } = 0;
         public UserImage UserImage { get; set; } = new UserImage();
         public List<Offer> Offers { get; set; } = new List<Offer>();
         public List<Opinion> Opinions { get; set; } = new List<Opinion>();
 
         [NotMapped]
+        [Display(Name = "Średnia ocen korepetytora")]
         public float? Score
         {
             get

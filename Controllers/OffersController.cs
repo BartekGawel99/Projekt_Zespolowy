@@ -18,7 +18,7 @@ namespace Projekt_Zespolowy.Controllers
         private readonly UserManager<User> _userManager;
 
         public OffersVM OffertyVM { get; set; }
-
+        public static string? currentUser { get; set; }
         public OffersController(UserManager<User> userManager, ApplicationDbContext db, IHttpContextAccessor httpContextAccessor)
         {
             _db = db;
@@ -174,7 +174,7 @@ namespace Projekt_Zespolowy.Controllers
         {
             var offerDetailsVM = new OfferDetailsVM();
             var offer = await _db.Offers
-                .Include(o => o.OfferCreator)
+                .Include(o=>o.OfferCreator).ThenInclude(i=>i.Opinions)
                 .Include(o => o.Localization)
                 .Where(x => x.OfferId == id)
                 .FirstOrDefaultAsync();
@@ -183,54 +183,33 @@ namespace Projekt_Zespolowy.Controllers
             return View(offerDetailsVM);
         }
 
-		public async Task<IActionResult> AddComment(AddCommentVM AddCommentVM)
+		public async Task<IActionResult> AddComment(string OfferCreatorId,  AddCommentVM AddCommentVM)
 		{
-            var istnieje = _db.Opinions
-                .Where(x => x.RewiewerId == User.Identity.Name)
-                .Where(x => x.RewiewerName == AddCommentVM.Offer.OfferCreator.Id)
+			var logedUser = _userManager.FindByNameAsync(_httpContextAccessor.HttpContext?.User.Identity?.Name).Result;
+			var istnieje = _db.Opinions
+                .Where(x => x.RewiewerId == logedUser.Id)
+                .Where(x => x.RewiewerName == OfferCreatorId)
                 .FirstOrDefault();
 
+
+            
+            var opnionedUser = _userManager.FindByIdAsync(OfferCreatorId).Result;
             if (istnieje == null)
             {
 				var comment = new Opinion()
 				{
 					Comment = AddCommentVM.Opinion.Comment,
 					Rate = AddCommentVM.Opinion.Rate,
-					RewiewerId = User.Identity.Name,
-					RewiewerName = AddCommentVM.Offer.OfferCreator.Id,
+					RewiewerId = logedUser.Id,
+					RewiewerName = logedUser.UserName,
 				};
-
-				Console.WriteLine(User.Identity.Name);
-				Console.WriteLine(AddCommentVM.Offer.OfferCreator.Id);
-
-
-
-				_db.Add(comment);
+				opnionedUser.Opinions.Add(comment);
+				_db.Opinions.Add(comment);
 			}
 
-            var oceny = await _db.Opinions
-                .Where(x => x.RewiewerName == AddCommentVM.Offer.OfferCreator.Id)
-                .ToListAsync();
+			var user = await _db.Users.FindAsync(logedUser.Id);
 
-            int score = 0;
-            int i = 0;
-
-            Console.WriteLine("\n");
-			foreach(var o in oceny)
-            {
-                Console.WriteLine(o.Rate);
-                score = o.Rate;
-                i++;
-            }
-
-            if (i != 0)
-                score = score / i;
-            else
-                score = score;
-
-			var user = await _db.Users.FindAsync(AddCommentVM.Offer.OfferCreator.Id);
-            user.Rating = score;
-			
+			 _db.Users.Update(user);
 			await _db.SaveChangesAsync();
 
 			return Redirect("~/");

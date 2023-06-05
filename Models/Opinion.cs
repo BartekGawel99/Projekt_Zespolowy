@@ -16,5 +16,6 @@ namespace Projekt_Zespolowy.Models
         public string RewiewerId { get; set; }
         
         public string RewiewerName { get; set; }
+        public string UserId { get; set; }
     }
 }
