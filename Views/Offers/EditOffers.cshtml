@@ -1,0 +1,97 @@
+﻿@using Projekt_Zespolowy.ViewModels
+@model EditOfferVM
+
+@{
+	ViewData["Title"] = "Edytuj ofertę";
+}
+
+<h1>Edytowanie oferty</h1>
+
+<hr />
+<div class="row">
+	<div class="col-md-12">
+		<form method="post" asp-controller="Offers" asp-action="EnterInsertion">
+			<input type="number" asp-for="@Model.Offer.OfferId" hidden />
+			<input type="number" asp-for="@Model.Offer.Localization.LocalizationId" hidden />
+			<div class="form-group">
+				<label asp-for="@Model.Offer.OfferName" class="control-label"></label>
+				<input asp-for="@Model.Offer.OfferName" class="form-control" />
+			</div>
+			<div class="form-group">
+				<label asp-for="@Model.Offer.Category" class="control-label"></label>
+				<select asp-for="@Model.Offer.Category.CategoryId"
+						asp-items="@(new SelectList(Model.CategoriesList, nameof(Model.Offer.Category.CategoryId), nameof(Model.Offer.Category.Name)))">
+					<option value="0">Wybierz kategorię zajęć</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label asp-for="@Model.Offer.OfferDescription" class="control-label"></label>
+				<input asp-for="@Model.Offer.OfferDescription" class="form-control" />
+			</div>
+			<div class="form-group">
+				<label asp-for="@Model.Offer.Price" class="control-label"></label>
+				<input asp-for="@Model.Offer.Price" class="form-control"></>
+			</div>
+			<div class="form-group form-check">
+				<label class="form-check-label">
+					<label asp-for="@Model.Offer.IsOnline" class="control-label"></label>
+					@Html.CheckBoxFor(m => m.Offer.IsOnline,
+					new Dictionary<string, object>{
+					{"id", "Offer_IsOnline"},
+					{"onclick","onlineCheck.call(this)"}})
+				</label>
+			</div>
+			<div id="localization-fields">
+				<div class="form-group">
+					<label asp-for="@Model.Offer.Localization.City" class="control-label"></label>
+					<input asp-for="@Model.Offer.Localization.City" class="form-control"></>
+					<span asp-validation-for="@Model.Localization.City" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="@Model.Offer.Localization.PostalCode" class="control-label"></label>
+					<input asp-for="@Model.Offer.Localization.PostalCode" class="form-control"></>
+					<span asp-validation-for="@Model.Offer.Localization.PostalCode" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="@Model.Offer.Localization.Street" class="control-label"></label>
+					<input asp-for="@Model.Offer.Localization.Street" class="form-control"></>
+					<span asp-validation-for="@Model.Offer.Localization.Street" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="@Model.Offer.Localization.HouseNumber" class="control-label"></label>
+					<input asp-for="@Model.Offer.Localization.HouseNumber" class="form-control"></>
+					<span asp-validation-for="@Model.Offer.Localization.HouseNumber" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="@Model.Offer.Localization.HomeNumber" class="control-label"></label>
+					<input asp-for="@Model.Offer.Localization.HomeNumber" class="form-control"></>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<input type="submit" value="Edytuj ofertę" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+	}
+
+<script>
+	function onlineCheck() {
+		var checkbox = document.getElementById("Offer_IsOnline");
+		var localizationDiv = document.getElementById("localization-fields");
+		console.log(checkbox.checked);
+		if (checkbox.checked == true) {
+			console.log("Jestem na tak");
+			localizationDiv.style.display = "none";
+		} else {
+			console.log("Wszedłem tu");
+			localizationDiv.style.display = "block";
+		}
+	}
+</script>

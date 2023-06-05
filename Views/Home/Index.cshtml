@@ -27,6 +27,7 @@
             <a class="site-link" asp-area="" asp-controller="Offers" asp-action="OfferDetails" asp-route-id="@item.OfferId">
             <div class="offer">
                 <h4>Korepetytor: @item.OfferCreator.FirstName @item.OfferCreator.LastName</h4>
+                <h5>@item.Category.Name</h5>
                 @if(!item.IsOnline)
                 {
                     <p>Lokalizacja: @item.Localization.City</p>

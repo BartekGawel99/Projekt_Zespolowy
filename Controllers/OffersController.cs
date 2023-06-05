@@ -79,6 +79,66 @@ namespace Projekt_Zespolowy.Controllers
             return Redirect("Add");
         }
 
+        public async Task<IActionResult> EnterInsertion(EditOfferVM EditOfferVM)
+        {
+            var oferta = await _db.Offers.FindAsync(EditOfferVM.Offer.OfferId);
+			var offerCategory = _db.Categories.Where(x => x.CategoryId == EditOfferVM.Offer.Category.CategoryId).FirstOrDefault();
+
+			if (oferta != null)
+            {
+                oferta.OfferName = EditOfferVM.Offer.OfferName;
+                oferta.OfferDescription = EditOfferVM.Offer.OfferDescription;
+                oferta.Price = EditOfferVM.Offer.Price;
+                oferta.IsOnline = EditOfferVM.Offer.IsOnline;
+                oferta.LevelClasses = EditOfferVM.Offer.LevelClasses;
+
+
+                if (EditOfferVM.Offer.IsOnline)
+                {
+                    var lok = await _db.Localizations.FindAsync(EditOfferVM.Offer.Localization.LocalizationId);
+					lok.City = "";
+					lok.HouseNumber = "";
+					lok.PostalCode = "";
+                    lok.HomeNumber = "";
+                    lok.Street = "";
+					
+				}
+                else
+                {
+					var lok = await _db.Localizations.FindAsync(EditOfferVM.Offer.Localization.LocalizationId);
+					lok.City = EditOfferVM.Offer.Localization.City;
+					lok.HouseNumber = EditOfferVM.Offer.Localization.HouseNumber;
+					lok.PostalCode = EditOfferVM.Offer.Localization.PostalCode;
+					lok.HomeNumber = EditOfferVM.Offer.Localization.HomeNumber;
+					lok.Street = EditOfferVM.Offer.Localization.Street;
+				}
+
+				if (offerCategory != null)
+					oferta.Category = offerCategory;
+
+				await _db.SaveChangesAsync();
+            }
+
+			return Redirect("ShowOffers");
+        }
+
+		public async Task<IActionResult> EditOffers() 
+        {
+			var offerDetailsVM = new EditOfferVM();
+			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var offers = await _db.Offers
+                .Include(o => o.OfferCreator)
+                .Include(o => o.Localization)
+                .Include(o => o.Category)
+                .Include(o => o.LevelClasses)
+                .Where(o => o.OfferCreator.Id == userId)
+				.FirstOrDefaultAsync();
+
+			offerDetailsVM.Offer = offers;
+            return View(offerDetailsVM);
+        }
+
         public async Task<IActionResult> ShowOffers()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
