@@ -9,27 +9,33 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Projekt_Zespolowy.Data;
 using Projekt_Zespolowy.Models;
 
 namespace Projekt_Zespolowy.Areas.Identity.Pages.Account.Manage
 {
     public class IndexModel : PageModel
     {
+        private readonly ApplicationDbContext _db;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
         public IndexModel(
             UserManager<User> userManager,
-            SignInManager<User> signInManager)
+            SignInManager<User> signInManager,
+            ApplicationDbContext db)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _db = db;
         }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
+        /// 
+        [Display(Name = "Email")]
         public string Username { get; set; }
 
         /// <summary>
@@ -57,20 +63,28 @@ namespace Projekt_Zespolowy.Areas.Identity.Pages.Account.Manage
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Phone]
-            [Display(Name = "Phone number")]
+            [Display(Name = "Numer Telefonu")]
             public string PhoneNumber { get; set; }
+            [Display(Name = "Imię")]
+            public string FirstName { get; set; }
+            [Display(Name = "Nazwisko")]
+            public string LastName { get; set; }
         }
 
         private async Task LoadAsync(User user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-
+            var userProf = _db.Users.Where(x => x.PhoneNumber.Equals(phoneNumber)).FirstOrDefault();
+            var firstName = userProf.FirstName;
+            var lastName = userProf.LastName;
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                FirstName = firstName,
+                LastName = lastName,
             };
         }
 
@@ -101,6 +115,7 @@ namespace Projekt_Zespolowy.Areas.Identity.Pages.Account.Manage
             }
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var userProf = _db.Users.Where(x => x.PhoneNumber.Equals(phoneNumber)).FirstOrDefault();
             if (Input.PhoneNumber != phoneNumber)
             {
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
@@ -110,6 +125,16 @@ namespace Projekt_Zespolowy.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
+            if (userProf != null)
+            {
+                userProf.FirstName = Input.FirstName;
+                userProf.LastName = Input.LastName;
+                _db.Users.Update(userProf);
+                await _db.SaveChangesAsync();
+            }
+
+
+
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
