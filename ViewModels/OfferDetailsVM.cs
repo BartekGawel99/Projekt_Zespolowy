@@ -6,5 +6,6 @@ namespace Projekt_Zespolowy.ViewModels
 	{
 		public Offer Offer { get; set; } = new Offer();
 		public Opinion Opinion { get; set; } = new Opinion();
+		public List<Opinion> OpinionList { get; set; } = new List<Opinion>();
 	}
 }

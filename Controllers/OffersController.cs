@@ -47,7 +47,7 @@ namespace Projekt_Zespolowy.Controllers
             {
                 CategoriesList = _db.Categories.Where(x => !string.IsNullOrEmpty(x.Name)).ToList(),
                 LevelClassesList = _db.LevelClasses.ToList(),
-            };
+			};
             return View(addOfferVM);
         }
         public async Task<IActionResult> AddOffer(AddOfferVM AddOfferVM)
@@ -124,11 +124,6 @@ namespace Projekt_Zespolowy.Controllers
 
 		public async Task<IActionResult> EditOffers() 
         {
-            var offerDetailsVM = new EditOfferVM()
-            {
-                CategoriesList = _db.Categories.Where(x => !string.IsNullOrEmpty(x.Name)).ToList(),
-                LevelClassesList = _db.LevelClasses.ToList(),
-            };
 			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var offers = await _db.Offers
@@ -139,7 +134,13 @@ namespace Projekt_Zespolowy.Controllers
                 .Where(o => o.OfferCreator.Id == userId)
 				.FirstOrDefaultAsync();
 
-			offerDetailsVM.Offer = offers;
+            var offerDetailsVM = new EditOfferVM()
+            {
+                CategoriesList = _db.Categories.Where(x => !string.IsNullOrEmpty(x.Name)).ToList(),
+                LevelClassesList = _db.LevelClasses.ToList(),
+                OpinionList = _db.Opinions.Where(x => x.RewiewerName == offers.OfferCreator.Id).ToList(),
+            };
+
             return View(offerDetailsVM);
         }
 
@@ -181,5 +182,58 @@ namespace Projekt_Zespolowy.Controllers
             offerDetailsVM.Offer = offer;
             return View(offerDetailsVM);
         }
-    }
+
+		public async Task<IActionResult> AddComment(AddCommentVM AddCommentVM)
+		{
+            var istnieje = _db.Opinions
+                .Where(x => x.RewiewerId == User.Identity.Name)
+                .Where(x => x.RewiewerName == AddCommentVM.Offer.OfferCreator.Id)
+                .FirstOrDefault();
+
+            if (istnieje == null)
+            {
+				var comment = new Opinion()
+				{
+					Comment = AddCommentVM.Opinion.Comment,
+					Rate = AddCommentVM.Opinion.Rate,
+					RewiewerId = User.Identity.Name,
+					RewiewerName = AddCommentVM.Offer.OfferCreator.Id,
+				};
+
+				Console.WriteLine(User.Identity.Name);
+				Console.WriteLine(AddCommentVM.Offer.OfferCreator.Id);
+
+
+
+				_db.Add(comment);
+			}
+
+            var oceny = await _db.Opinions
+                .Where(x => x.RewiewerName == AddCommentVM.Offer.OfferCreator.Id)
+                .ToListAsync();
+
+            int score = 0;
+            int i = 0;
+
+            Console.WriteLine("\n");
+			foreach(var o in oceny)
+            {
+                Console.WriteLine(o.Rate);
+                score = o.Rate;
+                i++;
+            }
+
+            if (i != 0)
+                score = score / i;
+            else
+                score = score;
+
+			var user = await _db.Users.FindAsync(AddCommentVM.Offer.OfferCreator.Id);
+            user.Rating = score;
+			
+			await _db.SaveChangesAsync();
+
+			return Redirect("~/");
+		}
+	}
 }

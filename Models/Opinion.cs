@@ -14,7 +14,7 @@ namespace Projekt_Zespolowy.Models
         [Range(1, 5)]
         public int Rate { get; set; }
         public string RewiewerId { get; set; }
-        [NotMapped]
+        
         public string RewiewerName { get; set; }
     }
 }

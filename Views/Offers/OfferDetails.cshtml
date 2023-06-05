@@ -105,7 +105,6 @@
 		</ul>
 	}*@
 
-	@*Ocena korepetytora. Trzeba dodać sprawdzenie czy jest jakaś opinia. Jeśli nie to dać informacje że brak opinii*@
 	<dt class = "col-sm-2">
 		@Html.DisplayNameFor(model => model.Offer.OfferCreator.Rating)
 	</dt>
@@ -113,10 +112,10 @@
 		@Html.DisplayFor(model => model.Offer.OfferCreator.Rating)
 	</dd>
 
-	@*Dodawanie ocen korepetytora. Trzeba dodać sprawdzanie czy dany użytkowników już nie dodał oceny korepetytora*@
 	@if (User.Identity.IsAuthenticated)
 	{
 		<form method="post" asp-controller="Offers" asp-action="AddComment">
+			<input type="text" asp-for="Offer.OfferCreator.Id" hidden />
 			<div class="form-group">
                 <label asp-for="Opinion.Comment" class="control-label"></label>
 					<input asp-for="Opinion.Comment" class="form-control" />
@@ -126,7 +125,11 @@
                 <label asp-for="Opinion.Rate" class="control-label"></label>
                 <input asp-for="Opinion.Rate" class="form-control" />
 					<span asp-validation-for="Opinion.Rate" class=" text-danger"></span>
+
             </div>
+			<div class="form-group">
+				<input type="submit" value="Dodaj ocenę" class="btn btn-primary" />
+			</div>
 		</form>
 	}
 </div>
