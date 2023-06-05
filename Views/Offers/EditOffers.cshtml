@@ -32,7 +32,7 @@
 				<label asp-for="@Model.Offer.Price" class="control-label"></label>
 				<input asp-for="@Model.Offer.Price" class="form-control"></>
 			</div>
-			<div class="form-group form-check">
+			<div class="form-group">
 				<label class="form-check-label">
 					<label asp-for="@Model.Offer.IsOnline" class="control-label"></label>
 					@Html.CheckBoxFor(m => m.Offer.IsOnline,
@@ -41,6 +41,7 @@
 					{"onclick","onlineCheck.call(this)"}})
 				</label>
 			</div>
+
 			<div id="localization-fields">
 				<div class="form-group">
 					<label asp-for="@Model.Offer.Localization.City" class="control-label"></label>
@@ -82,15 +83,16 @@
 	}
 
 <script>
+	document.addEventListener("DOMContentLoaded", function() {
+		onlineCheck();
+	});
+
 	function onlineCheck() {
 		var checkbox = document.getElementById("Offer_IsOnline");
 		var localizationDiv = document.getElementById("localization-fields");
-		console.log(checkbox.checked);
 		if (checkbox.checked == true) {
-			console.log("Jestem na tak");
 			localizationDiv.style.display = "none";
 		} else {
-			console.log("Wszedłem tu");
 			localizationDiv.style.display = "block";
 		}
 	}
