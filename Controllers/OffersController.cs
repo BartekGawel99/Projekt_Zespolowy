@@ -179,7 +179,17 @@ namespace Projekt_Zespolowy.Controllers
                 .Where(x => x.OfferId == id)
                 .FirstOrDefaultAsync();
 
-            offerDetailsVM.Offer = offer;
+			var logedUser = _userManager.FindByNameAsync(_httpContextAccessor.HttpContext?.User.Identity?.Name).Result;
+			
+            var istnieje = _db.Opinions
+				.Where(x => x.RewiewerId == logedUser.Id)
+				.Where(x => x.UserId == offer.OfferCreator.Id)
+				.FirstOrDefault();
+            if(istnieje != null)
+            {
+                offerDetailsVM.isCommented = true;
+            }
+			offerDetailsVM.Offer = offer;
             return View(offerDetailsVM);
         }
 
@@ -188,7 +198,7 @@ namespace Projekt_Zespolowy.Controllers
 			var logedUser = _userManager.FindByNameAsync(_httpContextAccessor.HttpContext?.User.Identity?.Name).Result;
 			var istnieje = _db.Opinions
                 .Where(x => x.RewiewerId == logedUser.Id)
-                .Where(x => x.RewiewerName == OfferCreatorId)
+                .Where(x => x.UserId == OfferCreatorId)
                 .FirstOrDefault();
 
 

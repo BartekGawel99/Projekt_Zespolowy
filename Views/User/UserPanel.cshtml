@@ -1,0 +1,81 @@
+﻿@model Projekt_Zespolowy.ViewModels.UserPanelVM
+
+@{
+    ViewData["Title"] = Model.User.UserName;
+}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-9">
+            <section class="py-2">
+                <div class="container px-4 px-lg-5 mt-5">
+                    <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                        @foreach (var offer in @Model.User.Offers)
+                        {
+                            <a class="btn mt-auto" href="/Offers/OfferDetails?item=@offer.OfferId">
+                                <div class="col mb-5">
+                                    <div class="card h-100">
+                                        <!-- Product details-->
+                                        <div class="text-center" style="height:5rem;">
+                                            <div style=" display:flex; flex-direction:column; flex:1;" class="h-100">
+                                                <h5 class="fw-bolder">@offer.OfferName</h5>
+                                                <div style="margin-top: auto;">
+                                                    @offer.Price zł
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="col-lg-3">
+            <div>
+                <p class="h5 text-center">Informacje o użytkowniku</p>
+                <p class="h5 text-muted text-center">@Model.User.FirstName</p>
+                <br />
+                <div class="d-flex flex-row justify-content-between">
+                    <div class="p-2">Miejscowość:</div>
+                    <div class="p-2">@Model.User.Email</div>
+                </div>
+                <div class="d-flex flex-row justify-content-between">
+                    <div class="p-2">Sprzedaje przedmiotów:</div>
+                    <div class="p-2">@Model.User.Offers.Count()</div>
+                </div>
+                <div class="d-flex flex-row justify-content-between">
+                    <div class="p-2">Ocena użytkownika:</div>
+                    @if (Model.User.Score != float.NaN && Model.User.Score > 0)
+                    {
+                        <div class="p-2">@Model.User.Score</div>
+                    }
+                    else
+                    {
+                        <div class="p-2">--</div>
+                    }
+                </div>
+            </div>
+            <div class="col mt-5">
+                <p class="h5 text-center">Ostatnie komentarze</p>
+                @if (@Model.User.Opinions.Any())
+                {
+                    @foreach (var opinion in Model.User.Opinions.OrderByDescending(x => x.OpinionId).Take(2))
+                    {
+                        <hr />
+                        <div class="m-2">
+                            <p class="text-justify">@opinion.Comment</p>
+                        </div>
+                    }
+                    <hr />
+                }
+                else
+                {
+                    <div class="m-2">
+                        <p class="text-justify">Brak komentarzy.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

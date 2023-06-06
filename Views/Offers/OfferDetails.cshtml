@@ -7,7 +7,15 @@
 <div>
 	<h4>@Html.DisplayFor(model => model.Offer.OfferName)</h4>
 	<hr />
+	
 	<dl class="row">
+		<form method="post" asp-controller="User" asp-action="UserPanel">
+			<input type="hidden" name="OfferCreatorId" value="@Model.Offer.OfferCreator.Id" />
+			<div class="form-group" >
+				<i class="fa-solid fa-user" style="font-size: 25px"></i>
+				<input type="submit" value="@Model.Offer.OfferCreator.UserName"  style="background-color:transparent; font-weight:bold; border:none;"/>
+			</div>
+		</form>
 		<dt class="col-sm-2">
 			@Html.DisplayNameFor(model => model.Offer.OfferCreator.FirstName)
 		</dt>
@@ -20,7 +28,8 @@
 		<dd class="col-sm-10">
 			@Html.DisplayFor(model => model.Offer.OfferCreator.LastName)
 		</dd>
-		@*Jeśli uzytkownik zalogowany to widzi numer telefonu oferenta*@
+
+			@*Jeśli uzytkownik zalogowany to widzi numer telefonu oferenta*@
 		@*if (User.Identity.IsAuthenticated && !string.IsNullOrEmpty(Model.Offer.OfferCreator.PhoneNumber))
 		{
 			<dt class = "col-sm-2">
@@ -118,27 +127,47 @@
 	{
 		<div class="p-2">--</div>
 	}
-
-	@if (User.Identity.IsAuthenticated)
+	@if(Model.isCommented == false)
 	{
+		
+		@if (User.Identity.IsAuthenticated)
+		{
 
-		<form method="post" asp-controller="Offers" asp-action="AddComment">
-			<input type="hidden" name="OfferCreatorId" value="@Model.Offer.OfferCreator.Id" />
-			<div class="form-group">
-                <label asp-for="Opinion.Comment" class="control-label"></label>
-					<input asp-for="Opinion.Comment" class="form-control" />
-					<span asp-validation-for="Opinion.Comment" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Opinion.Rate" class="control-label"></label>
-                <input asp-for="Opinion.Rate" class="form-control" />
-					<span asp-validation-for="Opinion.Rate" class=" text-danger"></span>
+			<form method="post" asp-controller="Offers" asp-action="AddComment">
+				<input type="hidden" name="OfferCreatorId" value="@Model.Offer.OfferCreator.Id" />
+				<div class="form-group">
+					<label asp-for="Opinion.Comment" class="control-label"></label>
+						<input asp-for="Opinion.Comment" class="form-control" />
+						<span asp-validation-for="Opinion.Comment" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="Opinion.Rate" class="control-label"></label>
+					<input asp-for="Opinion.Rate" class="form-control" />
+						<span asp-validation-for="Opinion.Rate" class=" text-danger"></span>
 
-            </div>
-			<div class="form-group">
-				<input type="submit" value="Dodaj ocenę" class="btn btn-primary"  />
-			</div>
-		</form>
+				</div>
+				<div class="form-group">
+					<input type="submit" value="Dodaj ocenę" class="btn btn-primary"  />
+				</div>
+			</form>
+		}
+	}
+	else
+	{
+		<div class="form-group">
+			<label style="color:forestgreen">Już Skomentowałeś Użytkownika: @Model.Offer.OfferCreator.FirstName @Model.Offer.OfferCreator.LastName</label>
+		</div>
+		<div class="form-group">
+			<label asp-for="Opinion.Comment" class="control-label" ></label>
+			<input asp-for="Opinion.Comment" class="form-control" disabled />
+			<span asp-validation-for="Opinion.Comment" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="Opinion.Rate" class="control-label"></label>
+			<input asp-for="Opinion.Rate" class="form-control" disabled/>
+			<span asp-validation-for="Opinion.Rate" class=" text-danger"></span>
+
+		</div>
 	}
 </div>
 
