@@ -23,7 +23,9 @@ namespace Projekt_Zespolowy.Controllers
             var tableWithOffersResult = _db.Offers
                 .Include(o => o.Localization)
                 .Include(o => o.OfferCreator)
+                .ThenInclude(i=>i.Opinions)
                 .Include(o => o.Category)
+                .Include(o=> o.LevelClasses)
                 .OrderByDescending(t => t.OfferId)
                 .Take(5)
                 .ToList();
