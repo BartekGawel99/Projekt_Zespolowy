@@ -138,10 +138,19 @@ namespace Projekt_Zespolowy.Controllers
             {
                 CategoriesList = _db.Categories.Where(x => !string.IsNullOrEmpty(x.Name)).ToList(),
                 LevelClassesList = _db.LevelClasses.ToList(),
-                OpinionList = _db.Opinions.Where(x => x.RewiewerName == offers.OfferCreator.Id).ToList(),
+                //OpinionList = _db.Opinions.Where(x => x.RewiewerName == offers.OfferCreator.Id).ToList(),
             };
 
-            return View(offerDetailsVM);
+            offerDetailsVM.Offer.OfferId = offers.OfferId;
+            offerDetailsVM.Offer.OfferName = offers.OfferName;
+            offerDetailsVM.Offer.OfferDescription = offers.OfferDescription;
+            offerDetailsVM.Offer.OfferCreator = offers.OfferCreator;
+            offerDetailsVM.Offer.IsOnline = offers.IsOnline;
+            offerDetailsVM.Offer.Price = offers.Price;
+            offerDetailsVM.Offer.Localization = offers.Localization;
+
+
+			return View(offerDetailsVM);
         }
 
         public async Task<IActionResult> ShowOffers()
