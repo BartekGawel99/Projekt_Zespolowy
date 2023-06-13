@@ -23,7 +23,7 @@ namespace Projekt_Zespolowy.Models
         {
             get
             {
-                float rateSum = 0;
+                float rateSum = 0;                
 
                 if (Opinions != null)
                 {

@@ -24,12 +24,16 @@ namespace Projekt_Zespolowy.Controllers
             {
                 UserPanelVM vm = new UserPanelVM();
                 vm.User = _db.Users
-                    .Include(x => x.Opinions)
                     .Include(x => x.Offers)
                     .FirstOrDefault(i => i.Id == OfferCreatorId);
 
+                vm.OpinionsList = _db.Opinions
+                    .Where(i => i.UserId == OfferCreatorId)
+                    .ToList();
+
                 if (vm.User != null)
                 {
+
                     return View(vm);
                 }
                 else

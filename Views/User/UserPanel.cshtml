@@ -87,21 +87,44 @@
                 </div>
                 <div class="d-flex flex-row justify-content-between">
                     <div class="p-2">Ocena użytkownika:</div>
-                    @if (Model.User.Score != float.NaN && Model.User.Score > 0)
+                    
+                    @{
+                        int sum = 0;
+                        int count = 0;
+                        double average;
+                    }
+                    <div class="p-2">
+                        @if(Model.OpinionsList.Count > 0)
+                        {
+                            @foreach(var item in Model.OpinionsList)
+                            {
+                                sum = item.Rate;
+                                count++;
+                            }
+                            average = (double)sum / count;
+                            <div class="p-2">@average</div>
+                        }
+                        else
+                        {
+                            <p>nothing</p>
+                        }
+                    </div>
+                    @*if (Model.User.Score != float.NaN && Model.User.Score > 0)
                     {
-                        <div class="p-2">@Model.User.Score</div>
+                         <div class="p-2">@Model.User.Score</div>
+                        
                     }
                     else
                     {
                         <div class="p-2">--</div>
-                    }
+                    }*@
                 </div>
             </div>
             <div class="col mt-5">
                 <p class="h5 text-center">Ostatnie komentarze</p>
-                @if (@Model.User.Opinions.Any())
+                @if (Model.OpinionsList.Count > 0)
                 {
-                    @foreach (var opinion in Model.User.Opinions.OrderByDescending(x => x.OpinionId).Take(2))
+                    @foreach (var opinion in Model.OpinionsList.OrderByDescending(x => x.OpinionId))
                     {
                         <hr />
                         <div class="m-2">
