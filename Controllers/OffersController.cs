@@ -149,7 +149,6 @@ namespace Projekt_Zespolowy.Controllers
             offerDetailsVM.Offer.Price = offers.Price;
             offerDetailsVM.Offer.Localization = offers.Localization;
 
-
 			return View(offerDetailsVM);
         }
 
