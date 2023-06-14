@@ -1,6 +1,7 @@
 ﻿@using Projekt_Zespolowy.Controllers
+@using Projekt_Zespolowy.ViewModels
 
-@model List<Offer>
+@model MainPageVM
 
 @{
     ViewData["Title"] = "Strona główna ";
@@ -8,14 +9,13 @@
 
 <div class="container">
     <h2>Lista najnowszych ofert na stronie</h2>
-    @foreach (var item in Model)
+    @foreach (var item in Model.NewOffers)
     {
         <a class="site-link" asp-area="" asp-controller="Offers" asp-action="OfferDetails" asp-route-id="@item.OfferId">
             <div class="offer" style="display: flex;">
                 <div class="col-8" style="flex: 1;">
                     <h6>Przedmiot: @item.Category.Name</h6>
                     <h5>Korepetytor: @item.OfferCreator.FirstName @item.OfferCreator.LastName</h5>
-                    </h6>
                     @if (!item.IsOnline)
                     {
                         <p><strong>Lokalizacja:</strong> @item.Localization.City</p>
@@ -34,14 +34,25 @@
                 <div class="col-4">
                         <p style="text-align: right;"><strong>Cena</strong>: @item.Price [zł/h]</p>
 
+                            <p style="text-align:right;">
                     @if (item.OfferCreator.Score != float.NaN && item.OfferCreator.Score > 0)
-                    {
-                        <p style="text-align: right;"><strong>Średnia ocen:</strong> @item.OfferCreator.Score/5</p>
+                    {   
+                        int yellowStarCount = (int)item.OfferCreator.Score;
+                        int greyStarCount = 5 - yellowStarCount;
+                        for (int i = 0; i < yellowStarCount; i++)
+                        {
+                             <i class="fa-regular fa-star" style="color:gold;"></i>
+                        }
+                        for (int i = 0; i < greyStarCount; i++)
+                        {
+                            <i class="fa-regular fa-star" style="color:grey;"></i>
+                        }
                     }
                     else
                     {
                         <p style="text-align: right;">Brak Opinii</p>
                     }
+                        </p>
 
                     @if (User.Identity.IsAuthenticated)
                     {
@@ -76,6 +87,9 @@
             </div>
         </a>
     }
+
+
+
 </div>
 
 

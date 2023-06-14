@@ -20,6 +20,7 @@ namespace Projekt_Zespolowy.Controllers
 
         public IActionResult Index()
         {
+            var mainPageVM = new MainPageVM();
             var tableWithOffersResult = _db.Offers
                 .Include(o => o.Localization)
                 .Include(o => o.OfferCreator)
@@ -29,8 +30,26 @@ namespace Projekt_Zespolowy.Controllers
                 .OrderByDescending(t => t.OfferId)
                 .Take(5)
                 .ToList();
+            mainPageVM.NewOffers = tableWithOffersResult;
 
-            return View(tableWithOffersResult);
+            var offerents = _db.Users.Where(x => x.Offers.Any()).ToList();
+            mainPageVM.TopUsers = offerents.OrderByDescending(x => x.Score).Take(10).ToList();
+            var categoriesCountList = new List<CategoryCount>();
+            foreach (var category in _db.Categories)
+            {
+                if(string.IsNullOrEmpty(category.Name))
+                    continue;
+                var categoryList = new CategoryCount()
+                {
+                    Name = category.Name,
+                    CategoryId = category.CategoryId,
+                    Count = _db.Offers.Where(x => x.Category.CategoryId == category.CategoryId).Count(),
+                };
+                categoriesCountList.Add(categoryList);
+            }
+            mainPageVM.TopCategories = categoriesCountList.OrderByDescending(x => x.Count).Take(10).ToList();
+
+            return View(mainPageVM);
         }
 
         public IActionResult Privacy()
