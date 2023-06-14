@@ -156,7 +156,7 @@
 	</div>
 	</div>
 
-	@if (Model.isCommented == false)
+	@if (Model.isCommented == false && Model.isOwner == false)
 	{
 		@if (User.Identity.IsAuthenticated)
 		{
@@ -181,9 +181,19 @@
 	}
 	else
 	{
+		@if(Model.isOwner == true)
+		{
 			<div class="form-group">
+				<label style="color:forestgreen">Nie możesz skomentować sam siebie</label>
+			</div>
+		}
+		else
+		{
+			
+		<div class="form-group">
 				<label style="color:forestgreen">Już Skomentowałeś Użytkownika: @Model.Offer.OfferCreator.FirstName @Model.Offer.OfferCreator.LastName</label>
 			</div>
+		}
 			<div class="form-group">
 				<label asp-for="Opinion.Comment" class="control-label" ></label>
 				<input asp-for="Opinion.Comment" class="form-control" disabled />

@@ -208,9 +208,13 @@ namespace Projekt_Zespolowy.Controllers
 				.Where(x => x.RewiewerId == logedUser.Id)
 				.Where(x => x.UserId == offer.OfferCreator.Id)
 				.FirstOrDefault();
-            if(istnieje != null)
+            if(istnieje != null  )
             {
                 offerDetailsVM.isCommented = true;
+            }
+            if(logedUser.Id == offer.OfferCreator.Id)
+            {
+                offerDetailsVM.isOwner = true;
             }
 			offerDetailsVM.Offer = offer;
             return View(offerDetailsVM);
