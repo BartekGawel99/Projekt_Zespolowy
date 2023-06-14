@@ -35,7 +35,7 @@ body {
 
     .menu-button:hover {
         color: lightgray;
-        border: 2px solid lightgray;
+        border: 1px solid lightgray;
     }
 
 .form-group {
