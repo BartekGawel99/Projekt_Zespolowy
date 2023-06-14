@@ -5,45 +5,16 @@
 @{
     ViewData["Title"] = "Strona główna ";
 }
-    @*<style>
-        .offer {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-        }
-        .offer h4 {
-            margin-top: 0;
-        }
-        .offer p {
-            margin: 0;
-        }
-    </style>*@
 
 <div class="container">
-    <h1>Lista najnowszych ofert</h1>
+    <h2>Lista najnowszych ofert na stronie</h2>
     @foreach (var item in Model)
     {
         <a class="site-link" asp-area="" asp-controller="Offers" asp-action="OfferDetails" asp-route-id="@item.OfferId">
             <div class="offer" style="display: flex;">
-                <div class="col-6" style="flex: 1;">
+                <div class="col-8" style="flex: 1;">
                     <h6>Przedmiot: @item.Category.Name</h6>
                     <h5>Korepetytor: @item.OfferCreator.FirstName @item.OfferCreator.LastName</h5>
-                    
-                    
-                        <h6>
-                            Poziom:
-                        @if (item.LevelClasses.Count > 0)
-                        {
-                            @foreach (var item2 in item.LevelClasses)
-                            {
-                                <span style="display: inline-block;">@item2.Name, </span>
-                            }
-                        }
-                        else
-                        {
-                                <span style="display: inline-block;">Nieokreślony</span>
-                        }
                     </h6>
                     @if (!item.IsOnline)
                     {
@@ -53,14 +24,19 @@
                     {
                         <p><strong>Lokalizacja:</strong> Zajęcia zdalne</p>
                     }
-                    <p style="height: 50px"><strong>Opis Oferty:</strong> @item.OfferDescription</p>
+                    @if(item.OfferDescription.Length <= 50){
+                        <p style="height: 25px"><strong>Opis Oferty:</strong> @item.OfferDescription</p>
+                    }
+                    else{
+                        <p style="height: 25px"><strong>Opis Oferty:</strong> @item.OfferDescription.Substring(0, 50)...</p>
+                    }
                 </div>
                 <div class="col-4">
-                    <p style="text-align: right;"><strong>Cena [zł/h]</strong>: @item.Price / 60min</p>
+                        <p style="text-align: right;"><strong>Cena</strong>: @item.Price [zł/h]</p>
 
                     @if (item.OfferCreator.Score != float.NaN && item.OfferCreator.Score > 0)
                     {
-                        <p style="text-align: right;"><strong>Ocena:</strong> @item.OfferCreator.Score</p>
+                        <p style="text-align: right;"><strong>Średnia ocen:</strong> @item.OfferCreator.Score/5</p>
                     }
                     else
                     {
@@ -71,44 +47,35 @@
                     {
                         @if(item.OfferCreator.PhoneNumber == null)
                         {
-                            <p style="text-align: right;"><strong>Numer Telefonu: </strong>--</p>
+                            <p style="text-align: right;"><strong>Numer telefonu: </strong>--</p>
                         }
                         else
                         {
-                            <p style="text-align: right;"><strong>Numer Telefonu: </strong>@item.OfferCreator.PhoneNumber</p>
+                            <p style="text-align: right;"><strong>Numer telefonu: </strong>@item.OfferCreator.PhoneNumber</p>
                         }
-
-                }
+                    }
                     else
                     {
-                        <p style="text-align: right;"><strong>Numer Telefonu: </strong>Zaloguj sie</p>
+                        <p style="text-align: right;"><strong>Numer Telefonu: </strong>Zaloguj się, aby zobaczyć</p>
                     }
+                        <p style="text-align: right;">
+                                <strong>Poziom: </strong>
+                        @if (item.LevelClasses.Count > 0)
+                        {
+                            @foreach (var item2 in item.LevelClasses)
+                            {
+                                <span style="display: inline-block;">@item2.Name</span>
+                            }
+                        }
+                        else
+                        {
+                            <span style="display: inline-block;">Nieokreślony</span>
+                        }
+                    </p>
                 </div>
             </div>
         </a>
     }
 </div>
-
-
-
-
-
-    @*<table class="table table-striped border">
-        <tr class="table-secondary">
-            <th>Nazwa</th>
-            <th>Lokalizacja</th>
-            <th>Imię iNazwisko</th>
-            <th>Cena</th>
-        </tr>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.ActionLink(item.OfferName, "OfferDetails", "Offers", new { OfferID = item.OfferId }, null)</td>
-                <td>@Html.DisplayFor(m => item.Localization.City)</td>
-                <td>@Html.DisplayFor(m => item.OfferCreator.FirstName) @Html.DisplayFor(m => item.OfferCreator.LastName)</td>
-                <td>@Html.DisplayFor(m => item.Price)</td>
-            </tr>
-        }
-    </table>*@
 
 
