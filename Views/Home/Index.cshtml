@@ -32,9 +32,8 @@
                     }
                 </div>
                 <div class="col-4">
-                        <p style="text-align: right;"><strong>Cena</strong>: @item.Price [zł/h]</p>
-
-                            <p style="text-align:right;">
+                    <p style="text-align: right;"><strong>Cena</strong>: @item.Price [zł/h]</p>
+                    <p style="text-align:right;">
                     @if (item.OfferCreator.Score != float.NaN && item.OfferCreator.Score > 0)
                     {   
                         int yellowStarCount = (int)item.OfferCreator.Score;
@@ -52,7 +51,7 @@
                     {
                         <p style="text-align: right;">Brak Opinii</p>
                     }
-                        </p>
+                    </p>
 
                     @if (User.Identity.IsAuthenticated)
                     {
@@ -70,7 +69,7 @@
                         <p style="text-align: right;"><strong>Numer Telefonu: </strong>Zaloguj się, aby zobaczyć</p>
                     }
                         <p style="text-align: right;">
-                                <strong>Poziom: </strong>
+                        <strong>Poziom: </strong>
                         @if (item.LevelClasses.Count > 0)
                         {
                             @foreach (var item2 in item.LevelClasses)
@@ -87,9 +86,52 @@
             </div>
         </a>
     }
+</div>
 
+<div class="container" style="display:flex">
+    <div class="col-4 offer">
+        <h4>Topowi korepetytorzy:</h4>
+        @foreach (var user in Model.TopUsers)
+        {
+            <div class="row" style="padding:5px;">
+                <a class="site-link" asp-area="" asp-controller="User" asp-action="UserPanel" asp-route-OfferCreatorId="@user.Id">
+                    <i class="fa-solid fa-user" style="font-size: 25px"></i>
+                    <span>@user.FirstName @user.LastName</span>
+                    @if (user.Score != float.NaN && user.Score > 0)
+                    {
+                        int yellowStarCount = (int)user.Score;
+                        int greyStarCount = 5 - yellowStarCount;
 
+                        for (int i = 0; i < yellowStarCount; i++)
+                        {
+                            <i class="fa-regular fa-star" style="color:gold;"></i>
+                        }
+                        for (int i = 0; i < greyStarCount; i++)
+                        {
+                            <i class="fa-regular fa-star" style="color:grey;"></i>
+                        }
+                    }
+                </a>
+            </div>
+        }
+    </div>
 
+    <div class="col-4 offer">
+        <h4>Topowe kategorie:</h4>
+        @foreach (var category in Model.TopCategories)
+        {
+            <div class="row" style="padding:5px;">
+                <a class="site-link" asp-area="" asp-controller="Offers" asp-action="GetOffersByCategoryId" asp-route-categoryId="@category.CategoryId">
+                    <i class="fa-solid fa-block-question" style="font-size: 25px"></i>
+                    <span>@category.Name (@category.Count)</span>
+                </a>
+            </div>
+        }
+    </div>
+
+    <div class="col-4">
+
+    </div>
 </div>
 
 

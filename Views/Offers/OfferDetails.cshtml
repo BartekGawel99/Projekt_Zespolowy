@@ -30,7 +30,7 @@
 		</dd>
 
 			@*Jeśli uzytkownik zalogowany to widzi numer telefonu oferenta*@
-		@*if (User.Identity.IsAuthenticated && !string.IsNullOrEmpty(Model.Offer.OfferCreator.PhoneNumber))
+		@if (User.Identity.IsAuthenticated && !string.IsNullOrEmpty(Model.Offer.OfferCreator.PhoneNumber))
 		{
 			<dt class = "col-sm-2">
 				@Html.DisplayNameFor(model => model.Offer.OfferCreator.PhoneNumber)
@@ -38,7 +38,7 @@
 			<dd class = "col-sm-10">
 				@Html.DisplayFor(model => model.Offer.OfferCreator.PhoneNumber)
 			</dd>
-		}*@
+		}
 		<dt class = "col-sm-2">
 			@Html.DisplayNameFor(model => model.Offer.Price)
 		</dt>
@@ -46,7 +46,7 @@
 			@Html.DisplayFor(model => model.Offer.Price) [zł/h]
 		</dd>
 
-		@*if (Model.Offer.IsOnline)
+		@if (Model.Offer.IsOnline)
 		{
 			<dt class = "col-sm-2">
 				@Html.DisplayNameFor(model => model.Offer.IsOnline)
@@ -92,7 +92,7 @@
 					</dd>
 				}
 			</div>
-		}*@
+		}
 
 		<dt class = "col-sm-2">
 			@Html.DisplayNameFor(model => model.Offer.OfferDescription)
@@ -118,21 +118,29 @@
 	</dt>
 	@if (Model.Offer.OfferCreator.Score != float.NaN && Model.Offer.OfferCreator.Score > 0)
 	{
-
-	<dd class = "col-sm-10">
-		@Html.DisplayFor(model => model.Offer.OfferCreator.Score)
-		</dd>
+		@*<dd class = "col-sm-10">
+			@Html.DisplayFor(model => model.Offer.OfferCreator.Score)
+		</dd>*@
+		int yellowStarCount = (int)Model.Offer.OfferCreator.Score;
+        int greyStarCount = 5 - yellowStarCount;
+        for (int i = 0; i < yellowStarCount; i++)
+        {
+			<i class="fa-regular fa-star" style="color:gold;"></i>
+        }
+        for (int i = 0; i < greyStarCount; i++)
+        {
+			<i class="fa-regular fa-star" style="color:grey;"></i>
+        }
 	}
 	else
 	{
 		<div class="p-2">--</div>
 	}
+
 	@if(Model.isCommented == false)
 	{
-		
 		@if (User.Identity.IsAuthenticated)
 		{
-
 			<form method="post" asp-controller="Offers" asp-action="AddComment">
 				<input type="hidden" name="OfferCreatorId" value="@Model.Offer.OfferCreator.Id" />
 				<div class="form-group">
@@ -175,5 +183,5 @@
 	@{
 		await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
-	}
+}
 	

@@ -18,6 +18,7 @@ namespace Projekt_Zespolowy.Controllers
 			_httpContextAccessor = httpContextAccessor;
 			_userManager = userManager;
 		}
+
         public IActionResult UserPanel(string OfferCreatorId)
         {
             if (!string.IsNullOrEmpty(OfferCreatorId))
@@ -33,7 +34,6 @@ namespace Projekt_Zespolowy.Controllers
 
                 if (vm.User != null)
                 {
-
                     return View(vm);
                 }
                 else
