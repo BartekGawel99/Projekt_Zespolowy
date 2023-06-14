@@ -69,46 +69,28 @@
                 <p class="h5 text-muted text-center">@Model.User.FirstName @Model.User.LastName</p>
                 <br />
                 <div class="d-flex flex-row justify-content-between">
-                    <div class="p-2">Email:</div>
-                    <div class="p-2">@Model.User.Email</div>
+                    <div class="">Email:</div>
+                    <div class="">@Model.User.Email</div>
                 </div>
                 <div class="d-flex flex-row justify-content-between">
-                    <div class="p-2">Oferuje kursów:</div>
-                    <div class="p-2">@Model.User.Offers.Count()</div>
+                    <div class="">Oferuje kursów:</div>
+                    <div class="">@Model.User.Offers.Count()</div>
                 </div>
                 <div class="d-flex flex-row justify-content-between">
-                    <div class="p-2">Ocena użytkownika:</div>
-                    
-                    @{
-                        int sum = 0;
-                        int count = 0;
-                        double average;
-                    }
-                    <div class="p-2">
-                        @if(Model.OpinionsList.Count > 0)
-                        {
-                            @foreach(var item in Model.OpinionsList)
-                            {
-                                sum = item.Rate;
-                                count++;
-                            }
-                            average = (double)sum / count;
-                            <div class="p-2">@average</div>
-                        }
-                        else
-                        {
-                            <p>nothing</p>
-                        }
-                    </div>
-                    @*if (Model.User.Score != float.NaN && Model.User.Score > 0)
+                    <div class="" style="margin-right:10px;">Ocena użytkownika:</div>
+                    @if (Model.User.Score != float.NaN && Model.User.Score > 0)
                     {
-                         <div class="p-2">@Model.User.Score</div>
-                        
+                        int yellowStarCount = (int)Model.User.Score;
+                        int greyStarCount = 5 - yellowStarCount;
+                        for (int i = 0; i < yellowStarCount; i++)
+                        {
+                            <i class="fa-regular fa-star" style="color:gold;"></i>
+                        }
+                        for (int i = 0; i < greyStarCount; i++)
+                        {
+                            <i class="fa-regular fa-star" style="color:grey;"></i>
+                        }
                     }
-                    else
-                    {
-                        <div class="p-2">--</div>
-                    }*@
                 </div>
             </div>
             <div class="col mt-5">

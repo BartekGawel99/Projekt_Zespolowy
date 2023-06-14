@@ -89,7 +89,7 @@
 </div>
 
 <div class="container" style="display:flex">
-    <div class="col-4 offer">
+    <div class="col-5 offer">
         <h4>Topowi korepetytorzy:</h4>
         @foreach (var user in Model.TopUsers)
         {
@@ -116,12 +116,12 @@
         }
     </div>
 
-    <div class="col-4 offer">
+    <div class="col-5 offset-2 offer">
         <h4>Topowe kategorie:</h4>
         @foreach (var category in Model.TopCategories)
         {
             <div class="row" style="padding:5px;">
-                <a class="site-link" asp-area="" asp-controller="Offers" asp-action="GetOffersByCategoryId" asp-route-categoryId="@category.CategoryId">
+                <a class="site-link" asp-area="" asp-controller="Home" asp-action="SearchBar" asp-route-searchString="@category.Name">
                     <i class="fa-solid fa-block-question" style="font-size: 25px"></i>
                     <span>@category.Name (@category.Count)</span>
                 </a>

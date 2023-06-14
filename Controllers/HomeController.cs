@@ -63,17 +63,6 @@ namespace Projekt_Zespolowy.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        //public async Task<IActionResult> SearchBar(SearchVM model)
-        //{
-        //    if (!string.IsNullOrEmpty(model.SearchString))
-        //    {
-        //        model.SearchResult = await SearchInDbAsync(model.SearchString);
-        //    }
-
-
-        //    return View(model);
-        //}
-
         public async Task<IActionResult> SearchBar(string searchString)
         {
             var model = new SearchVM();
@@ -90,9 +79,10 @@ namespace Projekt_Zespolowy.Controllers
         {
             var tableWithOffersResult = await _db.Offers
                 .Include(o => o.Localization)
-                .Include(o => o.LevelClasses)
-                .Include(o => o.Category)
                 .Include(o => o.OfferCreator)
+                .ThenInclude(i => i.Opinions)
+                .Include(o => o.Category)
+                .Include(o => o.LevelClasses)
                 .Where(t => t.OfferName.ToLower().Contains(SearchString.ToLower()) ||
                 t.Localization.City.ToLower().Contains(SearchString.ToLower()) ||
                 t.LevelClasses.Any(lc => lc.Name.ToLower().Contains(SearchString.ToLower())) ||

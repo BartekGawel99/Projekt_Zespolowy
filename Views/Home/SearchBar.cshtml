@@ -1,38 +1,89 @@
 ﻿@using Projekt_Zespolowy.ViewModels;
 @model SearchVM
 
-<h1>Przęglądanie ofert</h1>
-
-@*<form asp-action="SearchBar" method="post">
-	<div class="form-group">
-		<label for="SearchString">Szukana fraza:</label>
-		<input type="text" class="form-control" id="searchString" name="searchString" placeholder="Wpisz szukaną frazę">
-	</div>
-	<button type="submit" class="btn btn-primary" style="margin-top:10px;">Wyszukaj</button>
-</form>*@
-
 @if (Model.SearchResult != null && Model.SearchResult.Any())
 {
-		<h2>Lista pasujących ofert:</h2>
+		<h2>Lista ofert:</h2>
 		<div class="container">
-		@foreach (var offer in Model.SearchResult)
-		{
-			@*@Html.ActionLink(wynik.OfferName, "OfferDetails", "Offers", new { OfferID = wynik.OfferId }, null)*@
-					<a class="site-link" asp-area="" asp-controller="Offers" asp-action="OfferDetails" asp-route-id="@offer.OfferId">
-				<div class="offer">
-					<h4>Korepetytor: @offer.OfferCreator.FirstName @offer.OfferCreator.LastName</h4>
-					@if (!offer.IsOnline)
-					{
-						<p>Lokalizacja: @offer.Localization.City</p>
-					}
-					else
-					{
-						<p>Zajęcia zdalne</p>
-					}
-					<p>Cena [zł/h]: @offer.Price</p>
-				</div>
-			</a>
-		}
+        @foreach (var item in Model.SearchResult)
+        {
+                <a class="site-link" asp-area="" asp-controller="Offers" asp-action="OfferDetails" asp-route-id="@item.OfferId">
+                    <div class="offer" style="display: flex;">
+                        <div class="col-8" style="flex: 1;">
+                            <h6>Przedmiot: @item.Category.Name</h6>
+                            <h5>Korepetytor: @item.OfferCreator.FirstName @item.OfferCreator.LastName</h5>
+                        @if (!item.IsOnline)
+                        {
+                                    <p><strong>Lokalizacja:</strong> @item.Localization.City</p>
+                        }
+                        else
+                        {
+                                    <p><strong>Lokalizacja:</strong> Zajęcia zdalne</p>
+                        }
+                        @if (item.OfferDescription.Length <= 50)
+                        {
+                                    <p style="height: 25px"><strong>Opis Oferty:</strong> @item.OfferDescription</p>
+                        }
+                        else
+                        {
+                                    <p style="height: 25px"><strong>Opis Oferty:</strong> @item.OfferDescription.Substring(0, 50)...</p>
+                        }
+                        </div>
+                        <div class="col-4">
+                            <p style="text-align: right;"><strong>Cena</strong>: @item.Price [zł/h]</p>
+                            <p style="text-align:right;">
+                            @if (item.OfferCreator.Score != float.NaN && item.OfferCreator.Score > 0)
+                            {
+                                int yellowStarCount = (int)item.OfferCreator.Score;
+                                int greyStarCount = 5 - yellowStarCount;
+                                for (int i = 0; i < yellowStarCount; i++)
+                                {
+                                             <i class="fa-regular fa-star" style="color:gold;"></i>
+                                }
+                                for (int i = 0; i < greyStarCount; i++)
+                                {
+                                            <i class="fa-regular fa-star" style="color:grey;"></i>
+                                }
+                            }
+                            else
+                            {
+                                    <p style="text-align: right;">Brak Opinii</p>
+                            }
+                            </p>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @if (item.OfferCreator.PhoneNumber == null)
+                            {
+                                            <p style="text-align: right;"><strong>Numer telefonu: </strong>--</p>
+                            }
+                            else
+                            {
+                                            <p style="text-align: right;"><strong>Numer telefonu: </strong>@item.OfferCreator.PhoneNumber</p>
+                            }
+                        }
+                        else
+                        {
+                                    <p style="text-align: right;"><strong>Numer Telefonu: </strong>Zaloguj się, aby zobaczyć</p>
+                        }
+                                <p style="text-align: right;">
+                                <strong>Poziom: </strong>
+                            @if (item.LevelClasses.Count > 0)
+                            {
+                                @foreach (var item2 in item.LevelClasses)
+                                {
+                                                <span style="display: inline-block;">@item2.Name</span>
+                                }
+                            }
+                            else
+                            {
+                                        <span style="display: inline-block;">Nieokreślony</span>
+                            }
+                            </p>
+                        </div>
+                    </div>
+                </a>
+        }
 		</div>
 }
 else if (!string.IsNullOrEmpty(Model.SearchString))

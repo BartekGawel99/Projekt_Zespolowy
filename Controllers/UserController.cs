@@ -28,6 +28,12 @@ namespace Projekt_Zespolowy.Controllers
                     .Include(x => x.Offers)
                     .FirstOrDefault(i => i.Id == OfferCreatorId);
 
+                vm.OffersList = _db.Offers
+                    .Include(o => o.LevelClasses)
+                    .Include(o => o.Category)
+                    .Include(o => o.Localization)
+                    .Where(x => x.OfferCreator.Id == OfferCreatorId).ToList();
+
                 vm.OpinionsList = _db.Opinions
                     .Where(i => i.UserId == OfferCreatorId)
                     .ToList();

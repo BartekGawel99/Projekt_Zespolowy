@@ -19,7 +19,7 @@
         @foreach (var item in Model)
         {
             <tr>
-                    <td>@Html.ActionLink(item.OfferName, "EditOffers", "Offers", new { OfferID = item.OfferId }, null)</td>
+                <td>@Html.ActionLink(item.OfferName, "EditOffers", "Offers", new { OfferID = item.OfferId }, null)</td>
                 <td>@Html.DisplayFor(m => item.Localization.City)</td>
                 <td>@Html.DisplayFor(m => item.Price)</td>
                 <td>@Html.ActionLink("Usuń", "Delete", "Offers", new { OfferID = item.OfferId }, null)</td>
