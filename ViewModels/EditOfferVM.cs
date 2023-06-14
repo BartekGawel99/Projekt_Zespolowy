@@ -8,6 +8,6 @@ namespace Projekt_Zespolowy.ViewModels
 		public Localization Localization { get; set; } = new Localization();
 		public List<Category> CategoriesList { get; set; } = new List<Category>();
 		public List<LevelClass> LevelClassesList { get; set; } = new List<LevelClass>();
-		public List<Opinion> OpinionList { get; set; } = new List<Opinion>();
-	}
+        public LevelClass ChosenLevelClass { get; set; } = new LevelClass();
+    }
 }

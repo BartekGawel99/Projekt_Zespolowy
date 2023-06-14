@@ -55,6 +55,7 @@ namespace Projekt_Zespolowy.Controllers
             //TRZEBA ZROBIĆ ŻE JAK AddOfferVM.Offer.Category.CategoryId jest 0 to wróć do poprzedniego widoku z odpowiednią informacją i nie twórz oferty
 
             var offerCategory = _db.Categories.Where(x => x.CategoryId == AddOfferVM.Offer.Category.CategoryId).FirstOrDefault();
+            var levelClass = _db.LevelClasses.Where(x => x.LevelId == AddOfferVM.ChosenLevelClass.LevelId).FirstOrDefault();
 
             var Offer = new Offer()
             {
@@ -63,9 +64,8 @@ namespace Projekt_Zespolowy.Controllers
                 OfferCreator = _userManager.FindByNameAsync(_httpContextAccessor.HttpContext?.User.Identity?.Name).Result,
                 Price = AddOfferVM.Offer.Price,
                 IsOnline = AddOfferVM.Offer.IsOnline,
-                LevelClasses = AddOfferVM.Offer.LevelClasses,
-                //Localization = AddOfferVM.Localization,
             };
+
             if(!string.IsNullOrEmpty(AddOfferVM.Localization.PostalCode) && !string.IsNullOrEmpty(AddOfferVM.Localization.City) && !string.IsNullOrEmpty(AddOfferVM.Localization.Street) && !string.IsNullOrEmpty(AddOfferVM.Localization.HouseNumber))
             {
                 Offer.Localization = AddOfferVM.Localization;
@@ -73,6 +73,9 @@ namespace Projekt_Zespolowy.Controllers
 
             if (offerCategory != null)
                 Offer.Category = offerCategory;
+
+            if(levelClass != null)
+                Offer.LevelClasses.Add(levelClass);
 
             _db.Add(Offer);
             await _db.SaveChangesAsync();
@@ -83,40 +86,50 @@ namespace Projekt_Zespolowy.Controllers
         {
             var oferta = await _db.Offers.FindAsync(EditOfferVM.Offer.OfferId);
 			var offerCategory = _db.Categories.Where(x => x.CategoryId == EditOfferVM.Offer.Category.CategoryId).FirstOrDefault();
+            var levelClass = _db.LevelClasses.Where(x => x.LevelId == EditOfferVM.ChosenLevelClass.LevelId).FirstOrDefault();
 
-			if (oferta != null)
+            if (oferta != null)
             {
+                var existingLevelClasses = oferta.LevelClasses;
+                _db.LevelClasses.RemoveRange(existingLevelClasses);
+                _db.SaveChanges();
+
                 oferta.OfferName = EditOfferVM.Offer.OfferName;
                 oferta.OfferDescription = EditOfferVM.Offer.OfferDescription;
                 oferta.Price = EditOfferVM.Offer.Price;
                 oferta.IsOnline = EditOfferVM.Offer.IsOnline;
-                oferta.LevelClasses = EditOfferVM.Offer.LevelClasses;
-
+                //oferta.LevelClasses = EditOfferVM.Offer.LevelClasses;
 
                 if (EditOfferVM.Offer.IsOnline)
                 {
                     var lok = await _db.Localizations.FindAsync(EditOfferVM.Offer.Localization.LocalizationId);
-					lok.City = "";
-					lok.HouseNumber = "";
-					lok.PostalCode = "";
+                    lok.City = "";
+                    lok.HouseNumber = "";
+                    lok.PostalCode = "";
                     lok.HomeNumber = "";
                     lok.Street = "";
-					
-				}
+                }
                 else
                 {
-					var lok = await _db.Localizations.FindAsync(EditOfferVM.Offer.Localization.LocalizationId);
-					lok.City = EditOfferVM.Offer.Localization.City;
-					lok.HouseNumber = EditOfferVM.Offer.Localization.HouseNumber;
-					lok.PostalCode = EditOfferVM.Offer.Localization.PostalCode;
-					lok.HomeNumber = EditOfferVM.Offer.Localization.HomeNumber;
-					lok.Street = EditOfferVM.Offer.Localization.Street;
-				}
+                    var lok = await _db.Localizations.FindAsync(EditOfferVM.Offer.Localization.LocalizationId);
+                    lok.City = EditOfferVM.Offer.Localization.City;
+                    lok.HouseNumber = EditOfferVM.Offer.Localization.HouseNumber;
+                    lok.PostalCode = EditOfferVM.Offer.Localization.PostalCode;
+                    lok.HomeNumber = EditOfferVM.Offer.Localization.HomeNumber;
+                    lok.Street = EditOfferVM.Offer.Localization.Street;
+                }
 
-				if (offerCategory != null)
-					oferta.Category = offerCategory;
+                if (offerCategory != null)
+                    oferta.Category = offerCategory;
 
-				await _db.SaveChangesAsync();
+                if (levelClass != null)
+                {
+                    var levelClassessList = new List<LevelClass>();
+                    levelClassessList.Add(levelClass);
+                    oferta.LevelClasses = levelClassessList;
+                }
+
+                await _db.SaveChangesAsync();
             }
 
 			return Redirect("ShowOffers");
@@ -184,6 +197,8 @@ namespace Projekt_Zespolowy.Controllers
             var offer = await _db.Offers
                 .Include(o=>o.OfferCreator).ThenInclude(i=>i.Opinions)
                 .Include(o => o.Localization)
+                .Include(o => o.LevelClasses)
+                .Include(o => o.Category)
                 .Where(x => x.OfferId == id)
                 .FirstOrDefaultAsync();
 
@@ -208,8 +223,6 @@ namespace Projekt_Zespolowy.Controllers
                 .Where(x => x.RewiewerId == logedUser.Id)
                 .Where(x => x.UserId == OfferCreatorId)
                 .FirstOrDefault();
-
-
             
             var opnionedUser = _userManager.FindByIdAsync(OfferCreatorId).Result;
             if (istnieje == null)

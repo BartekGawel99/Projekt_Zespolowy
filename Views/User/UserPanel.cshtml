@@ -5,15 +5,15 @@
 }
 <div class="container">
     <div class="row">
-        <div class="col-lg-9">
+        <div class="col-9">
             <section class="py-2">
                         @foreach (var item in @Model.User.Offers)
                         {
+                            <div class="row">
                     <a class="btn" style="height:auto; width:contain" asp-area="" asp-controller="Offers" asp-action="OfferDetails" asp-route-id="@item.OfferId">
                                 <div class="offer" style="display: flex;">
                                     <div class="col-6" style="flex: 1;">
                                         <h6>Przedmiot: @item.Category.Name</h6>
-                                        <h5>Korepetytor: @item.OfferCreator.FirstName @item.OfferCreator.LastName</h5>
                                         <h6>
                                             Poziom:
                                             @if (item.LevelClasses.Count > 0)
@@ -40,16 +40,6 @@
                                     </div>
                                     <div class="col-4">
                                         <p style="text-align: right;"><strong>Cena [zł/h]</strong>: @item.Price / 60min</p>
-
-                                        @if (item.OfferCreator.Score != float.NaN && item.OfferCreator.Score > 0)
-                                        {
-                                            <p style="text-align: right;"><strong>Ocena:</strong> @item.OfferCreator.Score</p>
-                                        }
-                                        else
-                                        {
-                                            <p style="text-align: right;">Brak Opinii</p>
-                                        }
-
                                         @if (User.Identity.IsAuthenticated)
                                         {
                                             @if (item.OfferCreator.PhoneNumber == null)
@@ -69,20 +59,21 @@
                                     </div>
                                 </div>
                             </a>
+                            </div>
                         }
             </section>
         </div>
-        <div class="col-lg-3">
+        <div class="col-3">
             <div>
                 <p class="h5 text-center">Informacje o użytkowniku</p>
-                <p class="h5 text-muted text-center">@Model.User.FirstName</p>
+                <p class="h5 text-muted text-center">@Model.User.FirstName @Model.User.LastName</p>
                 <br />
                 <div class="d-flex flex-row justify-content-between">
                     <div class="p-2">Email:</div>
                     <div class="p-2">@Model.User.Email</div>
                 </div>
                 <div class="d-flex flex-row justify-content-between">
-                    <div class="p-2">Sprzedaje przedmiotów:</div>
+                    <div class="p-2">Oferuje kursów:</div>
                     <div class="p-2">@Model.User.Offers.Count()</div>
                 </div>
                 <div class="d-flex flex-row justify-content-between">
