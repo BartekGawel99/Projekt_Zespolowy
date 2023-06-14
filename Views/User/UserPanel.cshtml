@@ -9,7 +9,7 @@
             <section class="py-2">
                         @foreach (var item in @Model.User.Offers)
                         {
-                            <a class="btn" style="height:auto; width:contain" href="/Offers/OfferDetails?item=@item.OfferId">
+                    <a class="btn" style="height:auto; width:contain" asp-area="" asp-controller="Offers" asp-action="OfferDetails" asp-route-id="@item.OfferId">
                                 <div class="offer" style="display: flex;">
                                     <div class="col-6" style="flex: 1;">
                                         <h6>Przedmiot: @item.Category.Name</h6>
