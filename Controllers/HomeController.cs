@@ -71,6 +71,10 @@ namespace Projekt_Zespolowy.Controllers
                 model.SearchString = searchString;
                 model.SearchResult = await SearchInDbAsync(model.SearchString);
             }
+            else
+            {
+                return RedirectToAction("Index");
+            }
 
             return View(model);
         }

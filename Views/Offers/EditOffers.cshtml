@@ -8,7 +8,11 @@
 <h1>Edytowanie oferty</h1>
 
 <hr />
-<div class="row">
+
+	@if(Model.Offer == null)
+	{
+		<span style="color:red;">Wybrana oferta nie należy do Ciebie</span>
+	}
 	<div class="col-md-12">
 		<form method="post" asp-controller="Offers" asp-action="EnterInsertion">
 			<input type="number" asp-for="@Model.Offer.OfferId" hidden />
@@ -79,7 +83,7 @@
 			</div>
 		</form>
 	</div>
-</div>
+	
 
 @section Scripts {
 	@{

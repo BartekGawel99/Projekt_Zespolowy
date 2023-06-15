@@ -84,20 +84,24 @@ namespace Projekt_Zespolowy.Controllers
 
         public async Task<IActionResult> EnterInsertion(EditOfferVM EditOfferVM)
         {
-            var oferta = await _db.Offers.FindAsync(EditOfferVM.Offer.OfferId);
+            var oferta = await _db.Offers
+                .Include(o => o.LevelClasses)
+                .Where(o => o.OfferId == EditOfferVM.Offer.OfferId)
+                .FirstOrDefaultAsync();
 			var offerCategory = _db.Categories.Where(x => x.CategoryId == EditOfferVM.Offer.Category.CategoryId).FirstOrDefault();
             var levelClass = _db.LevelClasses.Where(x => x.LevelId == EditOfferVM.ChosenLevelClass.LevelId).FirstOrDefault();
 
             if (oferta != null)
             {
-                var existingLevelClasses = oferta.LevelClasses;
-                _db.LevelClasses.RemoveRange(existingLevelClasses);
-                _db.SaveChanges();
+                //var existingLevelClasses = oferta.LevelClasses;
+                //_db.SaveChanges();
 
-                oferta.OfferName = EditOfferVM.Offer.OfferName;
-                oferta.OfferDescription = EditOfferVM.Offer.OfferDescription;
-                oferta.Price = EditOfferVM.Offer.Price;
-                oferta.IsOnline = EditOfferVM.Offer.IsOnline;
+                var offer = await _db.Offers.FindAsync(EditOfferVM.Offer.OfferId);
+
+                offer.OfferName = EditOfferVM.Offer.OfferName;
+                offer.OfferDescription = EditOfferVM.Offer.OfferDescription;
+                offer.Price = EditOfferVM.Offer.Price;
+                offer.IsOnline = EditOfferVM.Offer.IsOnline;
                 //oferta.LevelClasses = EditOfferVM.Offer.LevelClasses;
 
                 if (EditOfferVM.Offer.IsOnline)
@@ -120,14 +124,14 @@ namespace Projekt_Zespolowy.Controllers
                 }
 
                 if (offerCategory != null)
-                    oferta.Category = offerCategory;
+                    offer.Category = offerCategory;
 
-                if (levelClass != null)
-                {
-                    var levelClassessList = new List<LevelClass>();
-                    levelClassessList.Add(levelClass);
-                    oferta.LevelClasses = levelClassessList;
-                }
+                //if (levelClass != null)
+                //{
+                //    var levelClassessList = new List<LevelClass>();
+                //    levelClassessList.Add(levelClass);
+                //    offer.LevelClasses = levelClassessList;
+                //}
 
                 await _db.SaveChangesAsync();
             }
@@ -135,32 +139,28 @@ namespace Projekt_Zespolowy.Controllers
 			return Redirect("ShowOffers");
         }
 
-		public async Task<IActionResult> EditOffers() 
+		public async Task<IActionResult> EditOffers(int OfferID) 
         {
 			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var offers = await _db.Offers
+            var offer = await _db.Offers
                 .Include(o => o.OfferCreator)
                 .Include(o => o.Localization)
                 .Include(o => o.Category)
                 .Include(o => o.LevelClasses)
-                .Where(o => o.OfferCreator.Id == userId)
+                .Where(o => o.OfferCreator.Id == userId && o.OfferId == OfferID)
 				.FirstOrDefaultAsync();
 
             var offerDetailsVM = new EditOfferVM()
             {
                 CategoriesList = _db.Categories.Where(x => !string.IsNullOrEmpty(x.Name)).ToList(),
                 LevelClassesList = _db.LevelClasses.ToList(),
-                //OpinionList = _db.Opinions.Where(x => x.RewiewerName == offers.OfferCreator.Id).ToList(),
             };
 
-            offerDetailsVM.Offer.OfferId = offers.OfferId;
-            offerDetailsVM.Offer.OfferName = offers.OfferName;
-            offerDetailsVM.Offer.OfferDescription = offers.OfferDescription;
-            offerDetailsVM.Offer.OfferCreator = offers.OfferCreator;
-            offerDetailsVM.Offer.IsOnline = offers.IsOnline;
-            offerDetailsVM.Offer.Price = offers.Price;
-            offerDetailsVM.Offer.Localization = offers.Localization;
+            if (offer != null)
+                offerDetailsVM.Offer = offer;
+            else
+                return RedirectToAction("ShowOffers");
 
 			return View(offerDetailsVM);
         }
