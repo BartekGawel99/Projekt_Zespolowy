@@ -32,7 +32,9 @@ namespace Projekt_Zespolowy.Controllers
                 .ToList();
             mainPageVM.NewOffers = tableWithOffersResult;
 
-            var offerents = _db.Users.Where(x => x.Offers.Any()).ToList();
+            var offerents = _db.Users
+                .Include(o => o.Opinions)
+                .Where(x => x.Offers.Any()).ToList();
             mainPageVM.TopUsers = offerents.OrderByDescending(x => x.Score).Take(10).ToList();
             var categoriesCountList = new List<CategoryCount>();
             foreach (var category in _db.Categories)
